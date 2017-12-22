@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<script type="text/javascript">
+		// ============================================第三章对象=======================================
+
+												// ===原型===
+
+		// 原型		我们将给Object增加一个create方法， 创建一个使用原对象作为其原型的新对象
+		if(typeof Object.beget !== 'function') {
+			Object.create = function(o) {
+				var F = function() {};
+				F.prototype = o;
+				return new F();
+			}
+		}
+		var another_stooge = Object.create(stooge);
+		// 原型		原型链接在更新时是不起作用的，当我们对某个对象做出改变时，不会触及到该对象原型:
+		another_stooge['first-name'] = 'Harry';
+		another_stooge['middle-name'] = 'Moses';
+		another_stooge.nickname = 'Moe';
+		// 原型  	原型链接只有在检索的时候才会被用到
+		// 原型 	原型关系是一种动态关系，如果我们添加一个新属性到原型中， 该原型会立即对所有基于该原型创建的对象可见
+		stooge.profession = 'actor';
+		another_stooge.profession	// 'actor'
+
+											// ===反射===
+		
+	</script>
+</body>
+</html>
