@@ -24,13 +24,25 @@
         init: function(parameter) {
             var wrapper = document.getElementById(parameter.id);
             var div = document.createElement("div");
+
             div.className = "scroller";
             wrapper.appendChild(div);
+
             var scroller = wrapper.querySelector(".scroller");
+            var list = wrapper.querySelector("#" + parameter.id + " ul");
+
+            scroller.insertBefore(list, scroller.childNodes[0]);
+
+            this.options = {};
+
+            for (var i in parameter) {
+                this.options[i] = parameter[i];
+            }
+
+
+
 
             if (parameter.headAnimation) {
-                var list = wrapper.querySelector("#" + parameter.id + " ul");
-                scroller.insertBefore(list, scroller.childNodes[0]);
                 var pullDown = document.createElement("div");
                 pullDown.className = "pullDown";
                 var loader = document.createElement("div");
@@ -43,7 +55,7 @@
                 var pullDownLabel = document.createElement("div");
                 pullDownLabel.className = "pullDownLabel";
                 pullDown.appendChild(pullDownLabel);
-                scroller.insertBefore(pullDown, scroller.childNodes[0]);
+                scroller.insertBefore(pullDown, scroller.children[0]);
                 var pullUp = document.createElement("div");
                 pullUp.className = "pullUp";
                 var loader = document.createElement("div");
@@ -67,33 +79,49 @@
             if (parameter.semicircle) {
                 var semicircle_up_wrapper = document.createElement('div');
                 var semicircle_up = document.createElement('i');
-
-                var semicircle_down = document.createElement('i');
-
                 semicircle_up.classList.add('semicircle_up');
                 semicircle_up_wrapper.classList.add('semicircle_up_wrapper');
                 semicircle_up_wrapper.appendChild(semicircle_up);
 
+                var semicircle_down_wrapper = document.createElement('div');
+                var semicircle_down = document.createElement('i');
                 semicircle_down.classList.add('semicircle_down');
+                semicircle_down_wrapper.classList.add('semicircle_down_wrapper');
+                semicircle_down_wrapper.appendChild(semicircle_down);
 
                 scroller.insertBefore(semicircle_up_wrapper, scroller.children[0]);
-                scroller.appendChild(semicircle_down);
+                scroller.appendChild(semicircle_down_wrapper);
 
-                this.semicircle_up_dom = document.querySelector('.semicircle_up_wrapper')
-                this.semicircle_down_dom = document.querySelector('.semicircle_down')
+                this.semicircle_up_dom = semicircle_up_wrapper;
+                this.semicircle_down_dom = semicircle_down_wrapper;
+
+                if (parameter.semicircle) {
+                    this.options.semicircleDragCount = 0;
+                }
             }
-
-            this.scrollIt(parameter, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset);
-        },
-        scrollIt: function(parameter, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset) {
-            var that = this;
 
             if (parameter.headAnimation) {
-                eval(parameter.id + "= new IScroll('#' + parameter.id, { probeType: 3, startY: -40, minScrollY: -pullDownOffset, bounce:false, onRefresh: function () {refresher.onRelease(pullDownEl,pullUpEl);} })");
-                pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullDownLable;
+                this.scrollIt(parameter, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset);
+            } else {
+                this.scrollIt(parameter);
             }
-            else {
-             eval(parameter.id + "= new IScroll('#' + parameter.id, { probeType: 3, startY: -40, bounce:false } )");
+
+
+        },
+        scrollIt: function(parameter, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset) {
+            var that = this,
+                semicircle_up_wrapper = this.semicircle_up_dom,
+                semicircle_up = semicircle_up_wrapper.querySelector('i');
+            semicircle_down_wrapper = this.semicircle_down_dom,
+                semicircle_down = semicircle_down_wrapper.querySelector('i');
+
+
+
+            if (parameter.headAnimation) {
+                eval(parameter.id + "= new IScroll('#' + parameter.id, { probeType: 3, startY: -40, headAnimation:true, minScrollY: -pullDownOffset, bounce:false, onRefresh: function () {refresher.onRelease(pullDownEl,pullUpEl);} })");
+                pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullDownLable;
+            } else {
+                eval(parameter.id + "= new IScroll('#' + parameter.id, { probeType: 3, bounce:false, } )");
             }
 
 
@@ -105,27 +133,48 @@
             //滚动
             eval(parameter.id).on('scroll', function() {
                 var y = this.y >> 0;
-                
-                if (y > -(pullUpOffset) && y < 0 && this.startY === -(pullUpOffset) ) {
-                    pullDownEl.id = '';
-                    pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullDownLable;
-                    this.options.minScrollY = -pullUpOffset;
-                }
-                if (y > 0 && this.startY >= -(pullUpOffset) ) {
-                    pullDownEl.classList.add("flip");
-                    pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullingDownLable;
-                    this.options.minScrollY = 0;
 
+                if (parameter.headAnimation) {
+                    if (y > -pullUpOffset) {
+                        // pullDownEl.id = '';
+                        pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullDownLable;
+                        if (this.options.minScrollY) {
+                            this.options.minScrollY = -pullUpOffset;
+                        }
+                    }
+                    if (y > 0) {
+                        pullDownEl.classList.add("flip");
+                        pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullingDownLable;
+                        this.options.minScrollY = 0;
+
+                    }
+                    if (this.scrollerHeight < this.wrapperHeight && y < (-pullUpOffset) || this.scrollerHeight > this.wrapperHeight && this.y < (this.maxScrollY - pullUpOffset)) {
+                        pullUpEl.style.display = "block";
+                        pullUpEl.classList.add("flip");
+                        pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullingUpLable;
+                    }
+                    // if (this.scrollerHeight < this.wrapperHeight && y > (-pullUpOffset) && pullUpEl.id.match('flip') || this.scrollerHeight > this.wrapperHeight && y > (this.maxScrollY - pullUpOffset) && pullUpEl.id.match('flip')) {
+                    //     pullDownEl.classList.remove("flip");
+                    //     pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullUpLable;
+                    // }
                 }
-                if (this.scrollerHeight < this.wrapperHeight && y < (-pullUpOffset) || this.scrollerHeight > this.wrapperHeight && this.y < (this.maxScrollY - pullUpOffset)) {
-                    pullUpEl.style.display = "block";
-                    pullUpEl.classList.add("flip");
-                    pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullingUpLable;
+
+
+                // 拖动半月阴影
+                if (parameter.semicircle.drag) {
+                    if (y === 0 && this.directionY < 0 && this.startY === 0 && that.options.semicircleDragCount <= 30 && !that.options.headAnimation) {
+                        semicircle_up_wrapper.style.display = 'block';
+                        semicircle_up.style.height = that.options.semicircleDragCount++ + 'px';
+                    }
+                    if (y === this.maxScrollY && this.directionY > 0 && this.startY === this.maxScrollY && that.options.semicircleDragCount <= 30) {
+                        semicircle_down_wrapper.style.display = 'block';
+                        semicircle_down.style.height = that.options.semicircleDragCount++ + 'px';
+                    }
                 }
-                if (this.scrollerHeight < this.wrapperHeight && y > (-pullUpOffset) && pullUpEl.id.match('flip') || this.scrollerHeight > this.wrapperHeight && y > (this.maxScrollY - pullUpOffset) && pullUpEl.id.match('flip')) {
-                    pullDownEl.classList.remove("flip");
-                    pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullUpLable;
-                }
+
+
+
+
             })
 
 
@@ -134,49 +183,46 @@
 
             //滚动结束
             eval(parameter.id).on("scrollEnd", function() {
-                var y = this.y >> 0,
-                    semicircle_up_wrapper = that.semicircle_up_dom,
-                    semicircle_up = semicircle_up_wrapper.querySelector('i');
+                var y = this.y >> 0;
 
-                    semicircle_down = that.semicircle_down_dom;
-
-                if (pullDownEl.className.match('flip') /*&&!pullUpEl.className.match('loading')*/ ) {
-                    pullDownEl.classList.add("loading");
-                    pullDownEl.classList.remove("flip");
-                    pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.loadingLable;
-                    pullDownEl.querySelector('.loader').style.display = "block"
-                    pullDownEl.style.lineHeight = "20px";
-                    if (parameter.pullDownAction) parameter.pullDownAction();
-                }
-                if (pullUpEl.className.match('flip') /*&&!pullDownEl.className.match('loading')*/ ) {
-                    pullUpEl.classList.add("loading");
-                    pullUpEl.classList.remove("flip");
-                    pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.loadingLable;
-                    pullUpEl.querySelector('.loader').style.display = "block"
-                    pullUpEl.style.lineHeight = "20px";
-                    if (parameter.pullUpAction) parameter.pullUpAction();
-                }
-             
-                // 拖动 半月阴影 
-                if (parameter.semicircle.drag) {
-                    if (this.startY < -40 && this.directionY < 0 && y >= -40) {
-                        var semiHeight;
-
-                        semicircle_up.style.top = '130px';
-                        semicircle_up.style.height = '30px';
-                        semiHeight = parseInt(semicircle_up.style.height, 10);
-
-                        that._animate(0, 0, 600, semicircle_up);
-
+                if (parameter.headAnimation) {
+                    if (pullDownEl.className.match('flip') /*&&!pullUpEl.className.match('loading')*/ ) {
+                        pullDownEl.classList.add("loading");
+                        pullDownEl.classList.remove("flip");
+                        pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.loadingLable;
+                        pullDownEl.querySelector('.loader').style.display = "block"
+                        pullDownEl.style.lineHeight = "20px";
+                        if (parameter.pullDownAction) parameter.pullDownAction();
+                    }
+                    if (pullUpEl.className.match('flip') /*&&!pullDownEl.className.match('loading')*/ ) {
+                        pullUpEl.classList.add("loading");
+                        pullUpEl.classList.remove("flip");
+                        pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.loadingLable;
+                        pullUpEl.querySelector('.loader').style.display = "block"
+                        pullUpEl.style.lineHeight = "20px";
+                        if (parameter.pullUpAction) parameter.pullUpAction();
                     }
                 }
+
                 // 自动
                 if (parameter.semicircle) {
-                     console.log(this.options.minScrollY);
-                    if ( y === -40) {
+                    if (y === 0 && this.startY !== 0 && !that.options.headAnimation) {
                         semicircle_up_wrapper.style.display = 'block';
                         semicircle_up.style.height = '30px';
-                        that._animate(0,0,600, semicircle_up);
+                        that._animate(0, 0, 600, semicircle_up_wrapper);
+                    }
+                    if (y === this.maxScrollY && this.startY !== this.maxScrollY) {
+                        semicircle_down_wrapper.style.display = 'block';
+                        semicircle_down.style.height = '30px';
+                        that._animate(0, 0, 600, semicircle_down_wrapper);
+                    }
+                    if (that.options.semicircleDragCount) {
+                        if (this.directionY < 0) {
+                            that._animate(0, 0, 600, semicircle_up_wrapper);
+                        } else {
+                            that._animate(0, 0, 600, semicircle_down_wrapper);
+                        }
+                        that.options.semicircleDragCount = 0;
                     }
                 }
             })
@@ -195,13 +241,15 @@
                 pullUpEl.style.lineHeight = pullUpEl.offsetHeight + "px";
             }
         },
-        _animate: function(destX, destY, duration, dom, easingFn) {
+        _animate: function(destX, destY, duration, dom) {
             var that = this,
                 // startX = this.x,
                 // startY = this.y,
-                startY = parseInt(dom.style.height, 10),
+                semicircle = dom.querySelector('i')
+            startY = parseInt(semicircle.style.height, 10),
                 startTime = new Date().getTime(),
                 destTime = startTime + duration;
+
 
             function step() {
                 var now = new Date().getTime(),
@@ -211,9 +259,8 @@
                 if (now >= destTime) {
                     that.semicircleAnimation = false;
                     // that._translate(destX, destY);
-                    dom.style.height = destY + 'px';
-                    console.log(dom.parentNode);
-                    dom.parentNode.style.display = 'none';
+                    dom.style.display = 'none';
+                    semicircle.style.height = destY + 'px';
                     // dom.style.height = destX + 'px';
 
                     // if ( !that.resetPosition(that.options.bounceTime) ) {
@@ -228,7 +275,7 @@
                 newY = (destY - startY) * easing + startY;
                 // that._translate(newX, newY);
 
-                dom.style.height = newY + 'px';
+                semicircle.style.height = newY + 'px';
                 // dom.style.height = destX + 'px';
 
                 if (that.semicircleAnimation) {
