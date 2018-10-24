@@ -600,7 +600,7 @@ IScroll.prototype = {
 		}
 
 		/*自定义*/ 
-		if ( newY >= 0 && !this.options.bounce ) {
+		if ( newY >= 0 && !this.options.bounce && this.options.headAnimation) {
 			newY = this.y + deltaY / 3;	
 		}
 		/*自定义*/ 
@@ -636,6 +636,7 @@ IScroll.prototype = {
 	},
 
 	_end: function (e) {
+
 		if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
 			return;
 		}
