@@ -1,114 +1,32 @@
-// PubAjax = (function () {
-//     return {
-//         post: function (BusinessType, date, successFun, errorFun, completeFunc) {
-//             date = date || {};
-//             date.voucher = sessionStorage.getItem("voucher");
-//             if (BusinessType) {
-//                 date.BusinessType = BusinessType;
-//             }
-//             date.BusinessData = {};
-//             var result;
-//             $.ajax({
-//                 type: "POST",
-//                 url: "/Mobile/WeChat/IndexPage.aspx",
-//                 cache: false,
-//                 data: date,
-//                 dataType: "json",
-//                 async: false,
-//                 success: successFun,
-//                 error: errorFun,
-//                 complete: completeFunc
-//             });
-//         }
-//     }
-// })();
-
-
-
-
-
-var data = [{
-        ContractGUID: '111111',
-        BrandName: '保时捷',
-        FormatTypeName: '高配版',
-        distance: '1000',
-        saleNum: '100'
-    },
-    {
-        ContractGUID: '222222',
-        BrandName: '香奈儿',
-        FormatTypeName: 'chanel',
-        distance: '500',
-        saleNum: '10000'
-    }, {
-        ContractGUID: '333',
-        BrandName: 'HP电脑',
-        FormatTypeName: '高配版',
-        distance: '2000',
-        saleNum: '1000'
-    }, {
-        ContractGUID: '444',
-        BrandName: '大师芯片',
-        FormatTypeName: '高配版',
-        distance: '3000',
-        saleNum: '1000000'
-    }, {
-        ContractGUID: '555',
-        BrandName: '杀手芯片',
-        FormatTypeName: '高配版',
-        distance: '1000000',
-        saleNum: '2000'
-    }, {
-        ContractGUID: '666',
-        BrandName: '洋房',
-        FormatTypeName: '高配版',
-        distance: '500',
-        saleNum: '3'
-    }, {
-        ContractGUID: '777',
-        BrandName: '念力',
-        FormatTypeName: '大师级',
-        distance: '110000',
-        saleNum: '3'
-    }, {
-        ContractGUID: '888',
-        BrandName: '路由器',
-        FormatTypeName: '高配版',
-        distance: '200',
-        saleNum: '1000000'
-    }, {
-        ContractGUID: '999',
-        BrandName: '烟灰缸',
-        FormatTypeName: '高配版',
-        distance: '399',
-        saleNum: '1000000'
-    }, {
-        ContractGUID: '000',
-        BrandName: '黄鹤楼',
-        FormatTypeName: '高配版',
-        distance: '2000',
-        saleNum: '300'
+PubAjax = (function () {
+    return {
+        post: function (BusinessType, date, successFun, errorFun, completeFunc) {
+            date = date || {};
+            date.voucher = sessionStorage.getItem("voucher");
+            if (BusinessType) {
+                date.BusinessType = BusinessType;
+            }
+            date.BusinessData = {};
+            var result;
+            $.ajax({
+                type: "POST",
+                url: "/Mobile/WeChat/IndexPage.aspx",
+                cache: false,
+                data: date,
+                dataType: "json",
+                async: false,
+                success: successFun,
+                error: errorFun,
+                complete: completeFunc
+            });
+        }
     }
-]
+})();
 
+var swiperCustomer
 
-var subFailureScroll;
+window.onload = function () {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-window.onload = function() {
     initControl.initSearchBottomCustomer();
     initControl.initCarouselCustomer();
     initControl.initCarouselImg();
@@ -119,51 +37,51 @@ window.onload = function() {
     //    position.isGetLocation();
 }
 
-var initControl = (function() {
-    var IndexFilter = "综合排序"; // 过滤条件
-    var count = 1; //初始化加载 位置
+var initControl = (function () {
+    var IndexFilter = "综合排序";   // 过滤条件
+    var count = 1;   //初始化加载 位置
 
     return {
         //初始化搜索栏底部商家
-        initSearchBottomCustomer: function() {
-            // PubAjax.post("selectSearchBottomCustomerInfo", {}, function (result) {
-            //     if (result.searchBottomCustomerList) {
-            //         $.each(result.searchBottomCustomerList, function (i, item) {
-            //             $('.hotCustomer').append('<div data-contractguid' + item.ContractGUID + '>' +
-            //                 '<span>' + item.BrandName + '</span></div>');
-            //         });
-            //     }
-            // })
+        initSearchBottomCustomer: function () {
+            PubAjax.post("selectSearchBottomCustomerInfo", {}, function (result) {
+                if (result.searchBottomCustomerList) {
+                    $.each(result.searchBottomCustomerList, function (i, item) {
+                        $('.hotCustomer').append('<div data-contractguid' + item.ContractGUID + '>' +
+                            '<span>' + item.BrandName + '</span></div>');
+                    });
+                }
+            })
         },
         //初始化轮播商家  
-        initCarouselCustomer: function() {
-            // PubAjax.post("selectCaouselCustomer", {}, function (result) {
-            //     $.each(result.carouselCustomerList, function (i, item) {
-            //         if (i < 10) {
-            //             $('.swiperCustomer .swiper-slide').eq(0).append(
-            //                  '<div class="scFormat" data-contractguid=' + item.contractGUID + '>' +
-            //                     '<div class="srFormat_top">' +
-            //                         '<img src="../../_image/Login.jpg" />' +
-            //                     '</div>' +
-            //                     '<div class="srFormat_bottom">' +
-            //                         '<span>' + item.BrandName + '</span>' +
-            //                     '</div>' +
-            //                 '</div>'
-            //             )
-            //         } else {
-            //             $('.swiperCustomer .swiper-slide').eq(1).append(
-            //                 '<div class="scFormat" data-contractguid=' + item.contractGUID + '>' +
-            //                     '<div class="srFormat_top">' +
-            //                         '<img src="../../_image/Login.jpg" />' +
-            //                     '</div>' +
-            //                     '<div class="srFormat_bottom">' +
-            //                         '<span>' + item.BrandName + '</span>' +
-            //                     '</div>' +
-            //                 '</div>'
-            //             )
-            //         }
-            //     })
-            // })
+        initCarouselCustomer: function () {
+            PubAjax.post("selectCaouselCustomer", {}, function (result) {
+                $.each(result.carouselCustomerList, function (i, item) {
+                    if (i < 10) {
+                        $('.swiperCustomer .swiper-slide').eq(0).append(
+                             '<div class="scFormat" data-contractguid=' + item.contractGUID + '>' +
+                                '<div class="srFormat_top">' +
+                                    '<img src="../../_image/Login.jpg" />' +
+                                '</div>' +
+                                '<div class="srFormat_bottom">' +
+                                    '<span>' + item.BrandName + '</span>' +
+                                '</div>' +
+                            '</div>'
+                        )
+                    } else {
+                        $('.swiperCustomer .swiper-slide').eq(1).append(
+                            '<div class="scFormat" data-contractguid=' + item.contractGUID + '>' +
+                                '<div class="srFormat_top">' +
+                                    '<img src="../../_image/Login.jpg" />' +
+                                '</div>' +
+                                '<div class="srFormat_bottom">' +
+                                    '<span>' + item.BrandName + '</span>' +
+                                '</div>' +
+                            '</div>'
+                        )
+                    }
+                })
+            })
 
             swiperCustomer = new Swiper(".swiperCustomer", {
                 pagination: {
@@ -177,7 +95,7 @@ var initControl = (function() {
 
         },
         //初始化轮播图片
-        initCarouselImg: function() {
+        initCarouselImg: function () {
             var swiperImg = new Swiper('.swiperImg', {
                 spaceBetween: 30,
                 centeredSlides: true,
@@ -194,119 +112,72 @@ var initControl = (function() {
             });
         },
         //初始化商家列表
-        initCustomerList: function(count) {
-            // PubAjax.post("selectCustomerListInfo", {
-            //     startPosition: count,
-            //     Filter: IndexFilter,
-            //     lng: sessionStorage.getItem("lat"),
-            //     lat: sessionStorage.getItem("lng")
-            // }, function (result) {
-            //     //删除 等待 icon
-            //     window.setTimeout(function () { $('.loaderWrapper').remove(); }, 500)
-
-            //     $.each(result.customerList, function (i, item) {
-            //         $('.customerListWrapper').append(
-            //             '<div class="customerList" data-contractguid=' + item.ContractGUID + '>' +
-            //                 '<div class="cl_left">' +
-            //                     '<img src="../../_image/Login.jpg" />' +
-            //                 '</div>' +
-            //                 '<div class="cl_right">' +
-            //                     '<div class="clr_brandName">' +
-            //                         '<span>' + item.BrandName + '</span> <span>...</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_formateType">' +
-            //                         '<span>' + item.FormatTypeName + '</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_position">' +
-            //                         '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_saleCount">' +
-            //                         '<span>销售量</span> <span>' + item.saleNum + '</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_discount">' +
-
-            //                     '</div>' +
-            //                 '</div>' +
-            //             '</div>'
-            //         )
-
-            //         if (item.FullDiscount) {
-            //             $('.clr_discount').append(
-            //                 '<div><i>整单折扣</i><span>' + item.FullDiscount + '</span></div>'
-            //             )
-            //         }
-            //         if (item.FullDiscount && item.MinusAmount) {
-            //             $('.clr_discount').append(
-            //                 '<div><i>满减</i><span>' + item.FullDiscount + ", " + item.MinusAmount + '</span></div>'
-            //             )
-            //         }
-            //     })
-            //     $('.customerList').on('click', function () {
-            //         window.location.href = "commodityDetail.htm?contractGUID=" + $(this).attr("data-contractguid");
-            //     })
-            // })
-
-
-            $('.customerListWrapper').empty();
-            $.each(data, function(i, item) {
-                $('.customerListWrapper').append(
-                    '<div class="customerList" data-contractguid=' + item.ContractGUID + '>' +
-                    '<div class="cl_left">' +
-                    '<img src="../../_image/Login.jpg" />' +
-                    '</div>' +
-                    '<div class="cl_right">' +
-                    '<div class="clr_brandName">' +
-                    '<span>' + item.BrandName + '</span> <span>...</span>' +
-                    '</div>' +
-                    '<div class="clr_formateType">' +
-                    '<span>' + item.FormatTypeName + '</span>' +
-                    '</div>' +
-                    '<div class="clr_position">' +
-                    '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
-                    '</div>' +
-                    '<div class="clr_saleCount">' +
-                    '<span>销售量</span> <span>' + item.saleNum + '</span>' +
-                    '</div>' +
-                    '<div class="clr_discount">' +
-
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
-                )
-
-                if (item.FullDiscount) {
-                    $('.clr_discount').append(
-                        '<div><i>整单折扣</i><span>' + item.FullDiscount + '</span></div>'
-                    )
+        initCustomerList: function (count) {
+            PubAjax.post("selectCustomerListInfo", {
+                startPosition: count,
+                Filter: IndexFilter,
+                lng: sessionStorage.getItem("lat"),
+                lat: sessionStorage.getItem("lng")
+            }, function (result) {
+                //删除 等待 icon
+                if ($('.loaderWrapper').css('display') === 'block') {
+                    window.setTimeout(function () {
+                        $('.loaderWrapper').remove();
+                    }, 500)
                 }
-                if (item.FullDiscount && item.MinusAmount) {
-                    $('.clr_discount').append(
-                        '<div><i>满减</i><span>' + item.FullDiscount + ", " + item.MinusAmount + '</span></div>'
-                    )
+
+                if (result.customerList.length === 0) {
+                    $('#IndexWrapper .loader').hide();
+                    $('#IndexWrapper .pullUpLabel').text('没有更多内容咯...');
+                    $('#IndexWrapper .pullUp').css('line-height', '40px');
+                    return;
                 }
+                 
+                $.each(result.customerList, function (i, item) {
+                    $('.customerListWrapper').append(
+                        '<div class="customerList" data-contractguid=' + item.ContractGUID + '>' +
+                            '<div class="cl_left">' +
+                                '<img src="../../_image/Login.jpg" />' +
+                            '</div>' +
+                            '<div class="cl_right">' +
+                                '<div class="clr_brandName">' +
+                                    '<span>' + item.BrandName + '</span> <span>...</span>' +
+                                '</div>' +
+                                '<div class="clr_formateType">' +
+                                    '<span>' + item.FormatTypeName + '</span>' +
+                                '</div>' +
+                                '<div class="clr_position">' +
+                                    '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
+                                '</div>' +
+                                '<div class="clr_saleCount">' +
+                                    '<span>销售量</span> <span>' + item.saleNum + '</span>' +
+                                '</div>' +
+                                '<div class="clr_discount">' +
+
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+                    )
+
+                    if (item.FullDiscount) {
+                        $('.clr_discount').append(
+                            '<div><i>整单折扣</i><span>' + item.FullDiscount + '</span></div>'
+                        )
+                    }
+                    if (item.FullDiscount && item.MinusAmount) {
+                        $('.clr_discount').append(
+                            '<div><i>满减</i><span>' + item.FullDiscount + ", " + item.MinusAmount + '</span></div>'
+                        )
+                    }
+                })
+                $('.customerList').on('click', function () {
+                    window.location.href = "commodityDetail.htm?contractGUID=" + $(this).attr("data-contractguid");
+                })
             })
-            $('.customerList').on('click', function() {
-                window.location.href = "commodityDetail.htm?contractGUID=" + $(this).attr("data-contractguid");
-            })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         },
         //初始化点击搜索
-        clickSeach: function() {
-            $('.searchBar').on('click', function() {
+        clickSeach: function () {
+            $('.searchBar').on('click', function () {
                 $('.seachPage').show();
                 //重置面板
                 $('.ss_panel').hide();
@@ -314,14 +185,14 @@ var initControl = (function() {
                 $('.categroy>i').css('color', 'black')
                 $('.categroy>i').addClass('fa-caret-down').removeClass('fa-caret-up');
                 // 记录排序名
-                sessionStorage.setItem('sortName', $('.synthesizeSort span').filter(function() { return this.className === 'ss_active_top' }).eq(0).text())
+                sessionStorage.setItem('sortName', $('.synthesizeSort span').filter(function () { return this.className === 'ss_active_top' }).eq(0).text())
 
                 IndexWrapper.disable();
                 initSearch.init();
             });
         },
         //初始化排序
-        initSort: function() {
+        initSort: function () {
             var synthesizeSort = document.querySelector(".synthesizeSort");
             var sortTriangle = synthesizeSort.querySelector(".sort_triangle");
             var ss_panel = document.querySelector(".ss_panel")
@@ -383,7 +254,7 @@ var initControl = (function() {
                 }
             }
 
-            synthesizeSort.addEventListener("click", function(e) {
+            synthesizeSort.addEventListener("click", function (e) {
                 var e = e || window.event;
                 var target = e.target || e.srcElement;
 
@@ -507,24 +378,34 @@ var initControl = (function() {
                     target = target.parentNode;
                 }
                 if (seachPage.style.display != 'block') {
-
                     IndexWrapper.scrollToElement('.recommendCustomer', 0, 0, -20);
+                    $('#IndexWrapper').after($('.seachBarWrapper')[0]);
+                    $('.seachBarWrapper').after($('.synthesizeSort')[0]);
+                    $('.customerListWrapper').css({ 'margin-top': '30px' })
                 }
                 count = 1;
             })
 
             //监听 遮罩点击
-            ss_shadow.addEventListener("click", function() {
+            ss_shadow.addEventListener("click", function () {
                 toggleSort();
             })
         },
         //初始化滚动
-        initScroll: function() {
+        initScroll: function () {
+            var pullDownOffset,
+                minScrollY,
+                myPositionH,
+                sortPositionH,
+                customerListPosition,
+                IndexSemicircle_up_dom,
+                IndexSemicircle_up;
+
 
             function pullUp() {
                 count += 10;
 
-                setTimeout(function() {
+                setTimeout(function () {
                     //上拉加载
                     initControl.initCustomerList(count);
                     IndexWrapper.refresh();
@@ -533,12 +414,14 @@ var initControl = (function() {
 
             function pullDown() {
 
-                setTimeout(function() {
+                setTimeout(function () {
                     //下拉 刷新
-                    // IndexWrapper.refresh();
-                    // IndexWrapper.scrollTo(0, -$('.pullDown').outerHeight());
-                }, 1000);
-
+                    $('#IndexWrapper .pullDownLabel').text('');
+                    $('#IndexWrapper .loader').hide();
+                    $('#IndexWrapper .pullDown').css('line-height', '40px');
+                    IndexWrapper.scrollTo(0, -$('.pullDown').outerHeight());
+                    IndexWrapper.options.minScrollY = -$('#IndexWrapper .pullDown').outerHeight();
+                }, 500);
             }
 
             refresher.init({
@@ -551,15 +434,21 @@ var initControl = (function() {
                 pullDownAction: pullDown
             })
 
+            // 计算高度
+            IndexSemicircle_up_dom = document.querySelector('#IndexWrapper .semicircle_up_wrapper');
+            IndexSemicircle_up = IndexSemicircle_up_dom.querySelector('i');
+            IndexSemicircle_up_dom.style.top = '130px';
+            pullDownOffset = -$('.pullDown').outerHeight();
+            minScrollY = -($('.currentAddressWrapper').outerHeight() + $('.pullDown').outerHeight());
+            myPositionH = $('.currentAddressWrapper').outerHeight() + $('.pullDown').outerHeight();       //我的位置高度
+            sortPositionH = $('.headerBar').outerHeight() + $('.swiperCustomer').outerHeight() + $('.swiperImg').outerHeight() + $('.recommendCustomer').outerHeight() + $('.pullDown').outerHeight() - $('.seachBarWrapper').outerHeight();
+            customerListPosition = $('.headerBar').outerHeight() + $('.swiperCustomer').outerHeight() + $('.swiperImg').outerHeight() + $('.recommendCustomer').outerHeight() + $('.pullDown').outerHeight() + $('.synthesizeSort').outerHeight();
+
+
+
             // 滚动定位
             function scrollPosition() {
                 var y = this.y >> 0;
-                // 计算高度
-                pullDownOffset = $('.pullDown').outerHeight();
-                minScrollY = $('.currentAddressWrapper').outerHeight() + $('.pullDown').outerHeight(),
-                    myPositionH = $('.currentAddressWrapper').outerHeight() + $('.pullDown').outerHeight(), //我的位置高度
-                    sortPositionH = $('.headerBar').outerHeight() + $('.swiperCustomer').outerHeight() + $('.swiperImg').outerHeight() + $('.recommendCustomer').outerHeight() + $('.pullDown').outerHeight() - $('.seachBarWrapper').outerHeight(),
-                    customerListPosition = $('.headerBar').outerHeight() + $('.swiperCustomer').outerHeight() + $('.swiperImg').outerHeight() + $('.recommendCustomer').outerHeight() + $('.pullDown').outerHeight() + $('.synthesizeSort').outerHeight();
 
                 if (y <= -myPositionH) {
                     $('#IndexWrapper').after($('.seachBarWrapper')[0]);
@@ -574,36 +463,27 @@ var initControl = (function() {
                     $('.customerListWrapper').css({ 'margin-top': 0 })
                 }
 
-                if (y < -minScrollY) {
 
-                    this.options.minScrollY = -minScrollY;
+                if (y < minScrollY) {
+                    this.options.minScrollY = minScrollY;
                 }
-                if (y > -minScrollY && y < -pullDownOffset) {
-                    console.log(y); 
-                    this.options.minScrollY = -pullDownOffset;
+                if (y > minScrollY && y < pullDownOffset) {
+                    this.options.minScrollY = pullDownOffset;
                 }
-
-                // if (y === -minScrollY && this.startY < -minScrollY && this.directionY < 0) {
-                //     refresher.semicircle_up_dom.style.display = 'block';
-                //     refresher.semicircle_up_dom.style.top = '130px';
-                //     refresher.semicircle_up_dom.querySelector('i').style.height = '30px'
-                //     refresher._animate(0, 0, 600, refresher.semicircle_up_dom);
-
-                // } 
-                // console.log(this.options.minScrollY);   
 
             }
             IndexWrapper.on('scroll', scrollPosition);
-            IndexWrapper.on('scrollEnd', function() {
+            IndexWrapper.on('scrollEnd', function () {
                 var y = this.y >> 0;
 
-                if (y === -minScrollY && this.startY < -minScrollY && this.directionY < 0) {
-                    refresher.semicircle_up_dom.style.display = 'block';
-                    refresher.semicircle_up_dom.style.top = '130px';
-                    refresher.semicircle_up_dom.querySelector('i').style.height = '30px'
-                    refresher._animate(0, 0, 600, refresher.semicircle_up_dom);
-
+                if (y === minScrollY && this.startY < minScrollY && this.directionY < 0) {
+                    IndexSemicircle_up_dom.style.display = 'block';
+                    IndexSemicircle_up_dom.style.top = '130px';
+                    IndexSemicircle_up.style.height = '30px';
+                    refresher._animate(0, 0, 600, IndexSemicircle_up_dom);
                 }
+
+
             });
 
         }
@@ -611,7 +491,7 @@ var initControl = (function() {
 })()
 
 // 搜索页面
-var initSearch = (function() {
+var initSearch = (function () {
     var spFilter = "综合排序";
     var spCount = 1;
     var subScroll;
@@ -635,12 +515,12 @@ var initSearch = (function() {
         localStorage.setItem("spHistory", item + ',' + historyList.join(','));
     }
     return {
-        init: function() {
+        init: function () {
             // 显示搜索页面 关闭首页滚动 并初始化
             $('.sph_searchWrapper input').focus();
             $('.sp_container').hide();
             $('.sp_searchFailure').hide();
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 $('.sph_searchWrapper').addClass('sph_searchWrapperAnimate');
             }, 0)
             // 删除 首页 动画效果
@@ -654,17 +534,17 @@ var initSearch = (function() {
             // 展示历史搜索 信息
             if (localStorage.getItem("spHistory")) {
                 $('.sp_historyContent').empty();
-                $.each(localStorage.getItem("spHistory").split(','), function(i, item) {
+                $.each(localStorage.getItem("spHistory").split(','), function (i, item) {
                     $('.sp_historyContent').append('<div class="sphc_item"><span>' + item + '</span></div>');
                 });
-                $('.sphc_item').on('click', function() {
+                $('.sphc_item').on('click', function () {
                     $('.sph_searchWrapper input').val($(this).find('span').text());
                     $('.sph_right').trigger('click');
                 });
             }
 
             // 监听左边返回按钮
-            $('.sph_left').on('click', function() {
+            $('.sph_left').on('click', function () {
                 $('.seachPage').hide();
                 IndexWrapper.enable();
                 $('.sph_searchWrapper').removeClass('sph_searchWrapperAnimate');
@@ -675,7 +555,7 @@ var initSearch = (function() {
                 } else {
                     $('.seachBarWrapper').addClass('returnAnimateSecond');
                 }
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     $('.seachBarWrapper').addClass('returnAnimateLast');
                 }, 100)
 
@@ -683,8 +563,8 @@ var initSearch = (function() {
                 //取得 y 轴 距离
                 var y = $('.scroller').css("transform").replace(/[^0-9\-,]/g, '').split(',')[5];
                 var sortBarPosition = $('.headerBar').outerHeight() + $('.swiperCustomer').outerHeight() +
-                    $('.swiperImg').outerHeight() + $('.recommendCustomer').outerHeight() +
-                    $('.synthesizeSort').outerHeight() - $('.pullDown').outerHeight();
+                                        $('.swiperImg').outerHeight() + $('.recommendCustomer').outerHeight() +
+                                        $('.synthesizeSort').outerHeight() - $('.pullDown').outerHeight();
 
                 if (y > -sortBarPosition) {
                     $('.recommendCustomer').after($('.synthesizeSort')[0]);
@@ -698,14 +578,14 @@ var initSearch = (function() {
                 $('.categroy>span').css('color', 'black');
                 $('.categroy>i').css('color', 'black').addClass('fa-caret-down').removeClass('fa-caret-up');
                 // 重新还原 首页排序
-                var sortName = $('.synthesizeSort span').filter(function() {
+                var sortName = $('.synthesizeSort span').filter(function () {
                     return $(this).text() === sessionStorage.getItem('sortName');
                 })
 
                 if (/^ss_item$/.test(sortName.eq(0).parent()[0].className)) {
                     $('.categroy > span').addClass('ss_active_top').text(sortName.eq(0).text());
                     $('.ss_item').removeClass('ss_active')
-                    $('.ss_item span').filter(function() {
+                    $('.ss_item span').filter(function () {
                         return $(this).text() === sortName.eq(0).text();
                     }).parent().addClass('ss_active').append($('.fa-check').parent());
                 } else {
@@ -714,8 +594,8 @@ var initSearch = (function() {
 
                 spCount = 1;
                 $('.sp_wrapper ul li').empty();
-                if (subScroll) {
-                    subScroll.refresh();
+                if (spWrapper) {
+                    spWrapper.refresh();
                 }
 
                 // 重新调用方法 与 取消监听
@@ -725,7 +605,7 @@ var initSearch = (function() {
             })
 
             // 监听右边搜索按钮
-            $('.sph_right').on('click', function() {
+            $('.sph_right').on('click', function () {
                 $('.sp_wrapper ul li').empty();
                 initSearch.initSearchCustomer("", 1);
                 $('.ss_active_top').removeClass('ss_active_top');
@@ -737,7 +617,7 @@ var initSearch = (function() {
             });
 
             // 清空
-            $('.spht_right').on('click', function() {
+            $('.spht_right').on('click', function () {
                 localStorage.clear();
                 $('.sp_historyContent').empty();
             });
@@ -745,339 +625,185 @@ var initSearch = (function() {
             //取消 监听;
             $('.searchBar').off();
         },
-        initSearchCustomer: function(filter, count) {
+        initSearchCustomer: function (filter, count, callee) {
             var inputValue = $('.sph_searchWrapper input').val();
             spCount = count ? count : spCount;
             if (inputValue.trim() == "") return;
 
-            // PubAjax.post("selectSpCustomerInfo", {
-            //     input: inputValue,
-            //     Filter: filter,
-            //     startPosition: spCount,
-            //     lng: sessionStorage.getItem("lat"),
-            //     lat: sessionStorage.getItem("lng")
-            // }, function (result) {
-            //     if (result.spCustomerList.length === 0) {
-            //         $('.sp_searchFailure').show();
+            PubAjax.post("selectSpCustomerInfo", {
+                input: inputValue,
+                Filter: filter,
+                startPosition: spCount,
+                lng: sessionStorage.getItem("lat"),
+                lat: sessionStorage.getItem("lng")
+            }, function (result) {
+                if (result.spCustomerList.length === 0) {
+                    // 下拉 没有数据
+                    if (callee && callee === 'pullUp') {
+                        $('.sp_wrapper .loader').hide();
+                        $('.sp_wrapper .pullUpLabel').text('没有更多内容咯...');
+                        return;
+                    }
+                    // 没有查询 数据
+                    $('.sp_searchFailure').show();
+                    PubAjax.post("selectCustomerListInfo", {
+                        startPosition: 1,
+                        lng: sessionStorage.getItem("lat"),
+                        lat: sessionStorage.getItem("lng")
+                    }, function (result) {
+                        //删除 等待 icon
+                        window.setTimeout(function () { $('.loaderWrapper').remove(); }, 500)
+                        $('.sps_customerList').empty();
 
-            //         PubAjax.post("selectCustomerListInfo", {
-            //             startPosition: 0,
-            //             lng: sessionStorage.getItem("lat"),
-            //             lat: sessionStorage.getItem("lng")
-            //         }, function (result) {
-            //             //删除 等待 icon
-            //             window.setTimeout(function () { $('.loaderWrapper').remove(); }, 500)
+                        $.each(result.customerList, function (i, item) {
+                            $('.sps_customerList').append(
+                        '<div class="customerList" data-contractguid=' + item.ContractGUID + '>' +
+                            '<div class="cl_left">' +
+                                '<img src="../../_image/Login.jpg" />' +
+                            '</div>' +
+                            '<div class="cl_right">' +
+                                '<div class="clr_brandName">' +
+                                    '<span>' + item.BrandName + '</span> <span>...</span>' +
+                                '</div>' +
+                                '<div class="clr_formateType">' +
+                                    '<span>' + item.FormatTypeName + '</span>' +
+                                '</div>' +
+                                '<div class="clr_position">' +
+                                    '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
+                                '</div>' +
+                                '<div class="clr_saleCount">' +
+                                    '<span>销售量</span> <span>' + item.saleNum + '</span>' +
+                                '</div>' +
+                                '<div class="clr_discount">' +
 
-            //             $.each(result.customerList, function (i, item) {
-            //                 $('.sps_customerList').append(
-            //             '<div class="customerList" data-contractguid=' + item.ContractGUID + '>' +
-            //                 '<div class="cl_left">' +
-            //                     '<img src="../../_image/Login.jpg" />' +
-            //                 '</div>' +
-            //                 '<div class="cl_right">' +
-            //                     '<div class="clr_brandName">' +
-            //                         '<span>' + item.BrandName + '</span> <span>...</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_formateType">' +
-            //                         '<span>' + item.FormatTypeName + '</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_position">' +
-            //                         '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_saleCount">' +
-            //                         '<span>销售量</span> <span>' + item.saleNum + '</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_discount">' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+                    )
 
-            //                     '</div>' +
-            //                 '</div>' +
-            //             '</div>'
-            //         )
+                            if (item.FullDiscount) {
+                                $('.clr_discount').append(
+                            '<div><i>整单折扣</i><span>' + item.FullDiscount + '</span></div>'
+                        )
+                            }
+                            if (item.FullDiscount && item.MinusAmount) {
+                                $('.clr_discount').append(
+                            '<div><i>满减</i><span>' + item.FullDiscount + ", " + item.MinusAmount + '</span></div>'
+                        )
+                            }
+                        })
+                        $('.customerList').on('click', function () {
+                            window.location.href = "commodityDetail.htm?contractGUID=" + $(this).attr("data-contractguid");
+                        })
+                    });
+                    if (!spsf_wrapper.enabled) {
+                        refresher.init({
+                            id: 'spsf_wrapper',
+                            semicircle: {
+                                drag: true
+                            }
+                        })
+                    }
+                } else {
+                    //  隐藏搜索失败界面
+                    $('.sp_searchFailure').hide();
+                    // 删除等待icon
+                    window.setTimeout(function () {
+                        $('.loaderWrapper').remove();
+                    }, 1000)
+                    $('.sp_wrapper .pullUpLabel').text('');
 
+                    // 设置 历史搜索
+                    setHistory(inputValue);
+                    // 显示主页面
+                    $('.sp_container').append($('.synthesizeSort')[0]);
+                    $('.sp_container').show();
+                    // 加载数据
+                    $.each(result.spCustomerList, function (i, item) {
+                        $('.sp_wrapper ul li').append(
+                         '<div class="customerList sp_customerList" data-contractguid=' + item.ContractGUID + '>' +
+                            '<div class="cl_left">' +
+                                '<img src="../../_image/Login.jpg" />' +
+                            '</div>' +
+                            '<div class="cl_right">' +
+                                '<div class="clr_brandName">' +
+                                    '<span>' + item.BrandName + '</span> <span>...</span>' +
+                                '</div>' +
+                                '<div class="clr_formateType">' +
+                                    '<span>' + item.FormatTypeName + '</span>' +
+                                '</div>' +
+                                '<div class="clr_position">' +
+                                    '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
+                                '</div>' +
+                                '<div class="clr_saleCount">' +
+                                    '<span>销售量</span> <span>' + item.saleNum + '</span>' +
+                                '</div>' +
+                                '<div class="clr_discount">' +
 
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+                        )
+                    })
+                    // 初始化 次级滚动
+                    initSearch.initSearchScroll();
 
-
-            //                 if (item.FullDiscount) {
-            //                     $('.clr_discount').append(
-            //                 '<div><i>整单折扣</i><span>' + item.FullDiscount + '</span></div>'
-            //             )
-            //                 }
-            //                 if (item.FullDiscount && item.MinusAmount) {
-            //                     $('.clr_discount').append(
-            //                 '<div><i>满减</i><span>' + item.FullDiscount + ", " + item.MinusAmount + '</span></div>'
-            //             )
-            //                 }
-            //             })
-            //             $('.customerList').on('click', function () {
-            //                 window.location.href = "commodityDetail.htm?contractGUID=" + $(this).attr("data-contractguid");
-            //             })
-            //         });
-
-            //         var spsf_Scroller = new IScroll('#spsf_wrapper', {
-            //             probeType: 3,
-            //             bounce: false,
-            //             spsfAddMoveCount: 0
-            //         });
-            //         spsf_Scroller.on('scroll', function () {
-            //             var y = this.y >> 0;
-
-            //             // 无动能 拉动 顶部图像
-            //             if (this.directionY < 0 && this.startY === 0 && this.options.spsfAddMoveCount < 30) {
-            //                 $('.sps_img_radius').css({ height: ++this.options.spsfAddMoveCount, 'border-top': '1px solid gray' });
-            //                 $('.sps_img').css({ 'border-color': 'gray' });
-            //                 if (this.options.spsfAddMoveCount === 30) {
-            //                     $('.sps_img_radius').css('background', 'radial-gradient(rgba(0,0,0, .7),rgba(0,0,0, .1))')
-            //                 }
-            //             }
-            //             // 无动能 拉动 底部图像
-            //             if (this.directionY > 0 && this.startY === this.wrapperHeight - this.scrollerHeight && this.options.spsfAddMoveCount < 30) {
-            //                 $('.sps_img_radius_bottom').css({ height: ++this.options.spsfAddMoveCount, 'border-bottom': '1px solid gray' });
-            //                 if (this.options.spsfAddMoveCount === 30) {
-            //                     $('.sps_img_radius_bottom').css('background', 'radial-gradient(rgba(0,0,0, .7),rgba(0,0,0, .1))')
-            //                 }
-            //             }
-            //         });
-            //         var timer
-            //         spsf_Scroller.on('scrollEnd', function () {
-            //             var that = this;
-            //             var y = this.y >> 0;
-
-            //             if ($('.sps_img_radius').outerHeight() || $('.sps_img_radius_bottom').outerHeight()) {
-
-            //                 timer = window.setInterval(function () {
-            //                     var moveCount;
-            //                     if ($('.sps_img_radius').outerHeight()) {
-            //                         moveCount = that.options.spsfAddMoveCount = that.options.spsfAddMoveCount - 1;
-            //                         $('.sps_img_radius').css({ height: moveCount + 'px',
-            //                             'border-top': '1px solid gray',
-            //                             background: 'radial-gradient(rgba(0,0,0, .5),rgba(0,0,0, .1))'
-            //                         });
-            //                     }
-            //                     if ($('.sps_img_radius_bottom').outerHeight()) {
-            //                         moveCount = that.options.spsfAddMoveCount = that.options.spsfAddMoveCount - 1;
-            //                         $('.sps_img_radius_bottom').css({ height: moveCount + 'px',
-            //                             'border-bottom': '1px solid gray',
-            //                             background: 'radial-gradient(rgba(0,0,0, .5),rgba(0,0,0, .1))'
-            //                         });
-            //                     }
-            //                     if (moveCount <= 0) {
-            //                         window.clearInterval(timer);
-            //                         $('.sps_img_radius').css({ 'border-top': 'none' });
-            //                         $('.sps_img_radius_bottom').css({ 'border-bottom': 'none' });
-            //                         $('.sps_img').css({ 'border-top-color': 'white' });
-            //                         that.options.spsfAddMoveCount = 0;
-            //                     }
-            //                 }, 0)
-            //             }
-
-            //             // 有动能
-            //             if (this.directionY < 0 && y === 0 && this.startY !== 0) {
-            //                 $('.sps_img_radius').css({ height: 10, 'border-top': '1px solid gray' });
-            //                 $('.sps_img').css('border-color', 'gray');
-            //                 window.setTimeout(function () {
-            //                     $('.sps_img_radius').css({ height: 0, 'border-top': 'none' });
-            //                     $('.sps_img').css('border-color', 'white');
-            //                 }, 100)
-            //             }
-
-            //             if (this.directionY > 0 && y === this.wrapperHeight - this.scrollerHeight && this.startY !== this.wrapperHeight - this.scrollerHeight) {
-            //                 $('.sps_img_radius_bottom').css({ height: 10, 'border-bottom': '1px solid gray' });
-            //                 window.setTimeout(function () {
-            //                     $('.sps_img_radius_bottom').css({ height: 0, 'border-top': 'none' });
-            //                 }, 100)
-            //             }
-            //         });
-            //     } else {
-            //         //  隐藏搜索失败界面
-            //         $('.sp_searchFailure').hide();
-            //         // 删除等待icon
-            //         window.setTimeout(function () {
-            //             $('.loaderWrapper').remove();
-            //         }, 1000)
-            //         //                    $('.sp_wrapper .loader').hide();
-            //         $('.sp_wrapper .pullUpLabel').text('');
-
-            //         // 设置 历史搜索
-            //         setHistory(inputValue);
-            //         // 显示主页面
-            //         $('.sp_container').append($('.synthesizeSort')[0]);
-            //         $('.sp_container').show();
-            //         // 加载数据
-            //         $.each(result.spCustomerList, function (i, item) {
-            //             $('.sp_wrapper ul li').append(
-            //              '<div class="customerList sp_customerList" data-contractguid=' + item.ContractGUID + '>' +
-            //                 '<div class="cl_left">' +
-            //                     '<img src="../../_image/Login.jpg" />' +
-            //                 '</div>' +
-            //                 '<div class="cl_right">' +
-            //                     '<div class="clr_brandName">' +
-            //                         '<span>' + item.BrandName + '</span> <span>...</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_formateType">' +
-            //                         '<span>' + item.FormatTypeName + '</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_position">' +
-            //                         '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_saleCount">' +
-            //                         '<span>销售量</span> <span>' + item.saleNum + '</span>' +
-            //                     '</div>' +
-            //                     '<div class="clr_discount">' +
-
-            //                     '</div>' +
-            //                 '</div>' +
-            //             '</div>'
-            //             )
-            //         })
-            //         if (!subScroll) {
-            //             $('.sp_wrapper li').after('<div class="pullUp"><div class="loader"><span></span><span></span><span></span><span></span></div><div class="pullUpLabel"></div></div>')
-            //             initSearch.initSearchScroll();
-            //         } else {
-            //             if (spCount == 1) {
-            //                 subScroll.scrollTo(0, 0);
-            //             }
-            //             subScroll.refresh();
-            //         }
-            //     }
-            // })
-
-
-
-            // 下拉 顶部 阴影反馈
-            $('.sp_searchFailure').show();
-            $('.sps_customerList').empty();
-            $.each(data, function(i, item) {
-                $('.sps_customerList').append(
-                    '<div class="customerList" data-contractguid=' + item.ContractGUID + '>' +
-                    '<div class="cl_left">' +
-                    '<img src="images/carouse8.jpg" />' +
-                    '</div>' +
-                    '<div class="cl_right">' +
-                    '<div class="clr_brandName">' +
-                    '<span>' + item.BrandName + '</span> <span>...</span>' +
-                    '</div>' +
-                    '<div class="clr_formateType">' +
-                    '<span>' + item.FormatTypeName + '</span>' +
-                    '</div>' +
-                    '<div class="clr_position">' +
-                    '<span>距离</span> <i class="fas fa-map-marker-alt"></i><span>' + item.distance + 'm</span>' +
-                    '</div>' +
-                    '<div class="clr_saleCount">' +
-                    '<span>销售量</span> <span>' + item.saleNum + '</span>' +
-                    '</div>' +
-                    '<div class="clr_discount">' +
-
-                    '</div>' +
-                    '</div>' +
-                    '</div>')
+                }
             })
-
-
-
-            initSearch.initFailure();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         },
-        initSearchScroll: function() {
+        initSearchScroll: function () {
             var loadData = false;
 
-            subScroll = new IScroll("#spWrapper", {
-                probeType: 3
-            });
 
-            refresher.init('spWrapper', {
-                semicircle:{
-                    drag:true
-                }
-            })
-
-
-
-
-            spWrapper.on('scroll', function() {
-                var y = this.y >> 0;
-
-                if (y < this.maxScrollY - 40) {
-                    loadData = true;
-                    $('.sp_wrapper .pullUp').css('line-height', '20px');
-                    $('.sp_wrapper .pullUpLabel').text('Release to more...');
-                }
-            })
-            spWrapper.on('scrollEnd', function() {
-                var y = this.y >> 0;
-                if (loadData && y == this.maxScrollY) {
-                    $('.sp_wrapper .loader').show();
-                    $('.sp_wrapper .pullUpLabel').text('Loading...');
-
-                    window.setTimeout(function() {
-                        spCount += 10;
-                        initSearch.initSearchCustomer();
-                        spWrapper.refresh();
-                        $('.sp_wrapper .pullUp').css('line-height', '40px');
-                        $('.sp_wrapper .loader').hide();
-                        loadData = false;
-                    }, 1000);
-                }
-                
-            });
-        },
-        initFailure: function() {
-
-            if (!spsf_wrapper.enabled) {
+            if (!spWrapper.enabled) {
                 console.log('新建')
-                // subFailureScroll = new IScroll('spsf_wrapper', {
-                //     probeType: 3,
-                //     semicircleHeight: 0,
-                //     bounce: false
-                // })
                 refresher.init({
-                    id:'spsf_wrapper',
-                    semicircle:{
-                        drag:true
+                    id: 'spWrapper',
+                    semicircle: {
+                        drag: true
+                    }
+                });
+
+                $('.sp_wrapper ul').after('<div class="pullUp" style="display:none"><div class="loader"><span></span><span></span><span></span><span></span></div><div class="pullUpLabel"></div></div>');
+
+
+                spWrapper.on('scroll', function () {
+                    var y = this.y >> 0;
+
+                    if (y === this.maxScrollY) {
+                        loadData = true;
+                        if ($('.sp_wrapper .pullUpLabel').text() === '没有更多内容咯...') {
+                            return;
+                        }
+                        $('.pullUp').show();
+                        spWrapper.refresh();
+                        $('.sp_wrapper .pullUp').css('line-height', '20px');
+                        $('.sp_wrapper .pullUpLabel').text('Release to more...');
+
                     }
                 })
- 
-                spsf_wrapper.on('scroll', function() {
-                    // 无动能 拉升
-                    var y = this.y >> 0; 
-                })
-                spsf_wrapper.on('scrollEnd', function() {
-                    // 无动能 拉升
-                    var y = this.y >> 0,
-                        that = this; 
-                })
+                spWrapper.on('scrollEnd', function () {
+                    var y = this.y >> 0;
+                    if (loadData && y == this.maxScrollY) {
+                        if ($('.sp_wrapper .pullUpLabel').text() === '没有更多内容咯...') {
+                            return;
+                        }
+                        $('.sp_wrapper .loader').show();
+                        $('.sp_wrapper .pullUpLabel').text('Loading...');
+                        window.setTimeout(function () {
+                            spCount += 10;
+                            initSearch.initSearchCustomer('', spCount, 'pullUp');
+                            $('.sp_wrapper .pullUp').css('line-height', '40px');
+                            $('.sp_wrapper .loader').hide();
+                            loadData = false;
+                        }, 1000);
+                    }
+                });
             } else {
-                console.log('刷新')
-                spsf_wrapper.refresh();
+                spWrapper.refresh();
+                if (spCount == 1) {
+                    spWrapper.scrollTo(0, 0);
+                }
             }
         }
     }
@@ -1087,9 +813,9 @@ var initSearch = (function() {
 1、功能描述：首页定位功能
 xhp 
 */
-var position = (function() {
+var position = (function () {
     return {
-        isGetLocation: function() {
+        isGetLocation: function () {
             //如果没有地址的缓存则重新获取定位
             if (sessionStorage.getItem("addr") == null) {
                 position.getLocation();
@@ -1099,7 +825,7 @@ var position = (function() {
             }
         },
         //获取当前用户位置信息
-        getLocation: function() {
+        getLocation: function () {
             //初始化定位组件 
             var geolocation = new qq.maps.Geolocation();
             //timeout 调用API超市时间默认10s  failTipFlag 判断用户如果未授权是否重新提示授权
@@ -1138,7 +864,7 @@ var position = (function() {
                 alert("定位失败！请您刷新后重新确认定位授权。");
             }
         },
-        openSelAddress: function() {
+        openSelAddress: function () {
             window.location.href = "/Mobile/WeChat/selAddress.htm";
         }
 
