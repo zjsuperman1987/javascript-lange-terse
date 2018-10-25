@@ -1,15 +1,15 @@
 /*!
- * pull to refresh v2.0
- *author:gzj / zj   IScroll.utils  不能调用
- *2018-10-22
- */
-(function(window, document, Math) {
+* pull to refresh v2.0
+*author:gzj / zj   IScroll.utils  不能调用
+*2018-10-22
+*/
+(function (window, document, Math) {
     var rAF = window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame ||
         window.msRequestAnimationFrame ||
-        function(callback) { window.setTimeout(callback, 1000 / 60); };
+        function (callback) { window.setTimeout(callback, 1000 / 60); };
 
 
     var refresher = {
@@ -21,7 +21,7 @@
             "pullingUpLable": "Release to load more...",
             "loadingLable": "Loading..."
         },
-        init: function(parameter) {
+        init: function (parameter) {
             var wrapper = document.getElementById(parameter.id);
             var div = document.createElement("div");
 
@@ -108,11 +108,11 @@
 
 
         },
-        scrollIt: function(parameter, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset) {
+        scrollIt: function (parameter, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset) {
             var that = this,
                 semicircle_up_wrapper = this.semicircle_up_dom,
-                semicircle_up = semicircle_up_wrapper.querySelector('i');
-            semicircle_down_wrapper = this.semicircle_down_dom,
+                semicircle_up = semicircle_up_wrapper.querySelector('i'),
+                semicircle_down_wrapper = this.semicircle_down_dom,
                 semicircle_down = semicircle_down_wrapper.querySelector('i');
 
 
@@ -125,13 +125,13 @@
             }
 
 
-            document.addEventListener('touchmove', function(e) {
+            document.addEventListener('touchmove', function (e) {
                 e.preventDefault();
             }, false);
 
 
             //滚动
-            eval(parameter.id).on('scroll', function() {
+            eval(parameter.id).on('scroll', function () {
                 var y = this.y >> 0;
 
                 if (parameter.headAnimation) {
@@ -148,7 +148,8 @@
                         this.options.minScrollY = 0;
 
                     }
-                    if (this.scrollerHeight < this.wrapperHeight && y < (-pullUpOffset) || this.scrollerHeight > this.wrapperHeight && this.y < (this.maxScrollY - pullUpOffset)) {
+
+                    if (this.scrollerHeight < this.wrapperHeight && y < (-pullUpOffset) || this.scrollerHeight > this.wrapperHeight && y>= this.maxScrollY - 5) {
                         pullUpEl.style.display = "block";
                         pullUpEl.classList.add("flip");
                         pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullingUpLable;
@@ -158,7 +159,6 @@
                     //     pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullUpLable;
                     // }
                 }
-
 
                 // 拖动半月阴影
                 if (parameter.semicircle.drag) {
@@ -171,10 +171,6 @@
                         semicircle_down.style.height = that.options.semicircleDragCount++ + 'px';
                     }
                 }
-
-
-
-
             })
 
 
@@ -182,11 +178,11 @@
 
 
             //滚动结束
-            eval(parameter.id).on("scrollEnd", function() {
+            eval(parameter.id).on("scrollEnd", function () {
                 var y = this.y >> 0;
 
                 if (parameter.headAnimation) {
-                    if (pullDownEl.className.match('flip') /*&&!pullUpEl.className.match('loading')*/ ) {
+                    if (pullDownEl.className.match('flip') /*&&!pullUpEl.className.match('loading')*/) {
                         pullDownEl.classList.add("loading");
                         pullDownEl.classList.remove("flip");
                         pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.loadingLable;
@@ -194,7 +190,7 @@
                         pullDownEl.style.lineHeight = "20px";
                         if (parameter.pullDownAction) parameter.pullDownAction();
                     }
-                    if (pullUpEl.className.match('flip') /*&&!pullDownEl.className.match('loading')*/ ) {
+                    if (pullUpEl.className.match('flip') /*&&!pullDownEl.className.match('loading')*/) {
                         pullUpEl.classList.add("loading");
                         pullUpEl.classList.remove("flip");
                         pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.loadingLable;
@@ -206,7 +202,7 @@
 
                 // 自动
                 if (parameter.semicircle) {
-                    if (y === 0 && this.startY !== 0 && !that.options.headAnimation) {
+                    if (y === 0 && this.startY !== 0 && !this.options.headAnimation) {
                         semicircle_up_wrapper.style.display = 'block';
                         semicircle_up.style.height = '30px';
                         that._animate(0, 0, 600, semicircle_up_wrapper);
@@ -227,7 +223,7 @@
                 }
             })
         },
-        onRelease: function(pullDownEl, pullUpEl) {
+        onRelease: function (pullDownEl, pullUpEl) {
             if (pullDownEl.className.match('loading')) {
                 pullDownEl.classList.toggle("loading");
                 pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullDownLable;
@@ -241,10 +237,10 @@
                 pullUpEl.style.lineHeight = pullUpEl.offsetHeight + "px";
             }
         },
-        _animate: function(destX, destY, duration, dom) {
+        _animate: function (destX, destY, duration, dom) {
             var that = this,
-                // startX = this.x,
-                // startY = this.y,
+            // startX = this.x,
+            // startY = this.y,
                 semicircle = dom.querySelector('i')
             startY = parseInt(semicircle.style.height, 10),
                 startTime = new Date().getTime(),
@@ -295,7 +291,7 @@
     if (typeof module != 'undefined' && module.exports) {
         module.exports = refresher;
     } else if (typeof define == 'function' && define.amd) {
-        define(function() { return refresher; });
+        define(function () { return refresher; });
     } else {
         window.refresher = refresher;
     }
