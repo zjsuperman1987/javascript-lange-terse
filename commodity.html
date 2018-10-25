@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html style="font-size: 100px;">
+<head>
+    <!-- meta使用viewport以确保页面可自由缩放 -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 引入 底层css 样式 -->
+    <link type="text/css" rel="stylesheet" href="/Mobile/WeChat/_css/common.css" />
+    <link type="text/css" rel="stylesheet" href="/Mobile/WeChat/_css/CommonPartially.css" />
+    <!--字体样式-->
+    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">-->
+    <!--轮播swiper.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.1.0/css/swiper.min.css">
+    <!--<link href="/_control/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />-->
+    <!--<link href="/_control/layui/css/layui.css" rel="stylesheet" type="text/css" />-->
+    <!--引入pullToRefresh.css-->
+    <link rel="stylesheet" type="text/css" href="/Mobile/WeChat/_control/scroll/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/Mobile/WeChat/_control/scroll/pullToRefresh.css" />
+    <!-- 引入 底层Js 库-->
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_js/jquery.min.js"></script>
+    <!--<script type="text/javascript" language="javascript" src="https://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>-->
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_js/common.js"></script>
+    <!-- 引入 layer 库-->
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_control/layer_mobile/layer.js"></script>
+    <!-- 引入Swiper轮播插件-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.1.0/js/swiper.min.js"></script>
+    <!--引入IScroll.js-->
+    <script src="/Mobile/WeChat/_control/scroll/iscroll-probe.js"></script>
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_control/scroll/pullToRefresh.js"></script>
+    <!--腾讯 定位-->
+    <script type="text/javascript" src='https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js '></script>
+    <!--引入自身js-->
+    <script type="text/javascript" language="javascript" src="commodityDetail.js"></script>
+    <title>会员中心</title>
+    <style>
+        *
+        {
+            font-size:12px;
+            box-sizing: border-box;    
+        }
+        body
+        {
+            overflow: hidden;
+            font-size: 12px;
+        }
+        .clearfix:after {
+            content: ".";
+            display: block;
+            clear: both;
+            visibility: hidden;
+            line-height: 0;
+            height: 0;
+        } 
+        .clearfix {
+            display: inline-block;
+        }
+        /*头部*/
+        .header
+        {
+            width: 100%;
+            height: 1rem;
+            background:white;
+        }
+        .headerPosition
+        {
+            position:fixed;
+            z-index:1;
+            clip:rect(0, 320px, 50px,0);    
+        }
+        .header img
+        {
+            width: 100%;
+            height: 100%;
+        }
+        .h_searchWrapper
+        {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: .5rem;
+            padding: .1rem;
+            /*background: blue;*/
+        }
+        .hsw_left
+        {
+            float: left;
+            width: .3rem;
+            height: .3rem;
+            line-height: .3rem;
+            text-align: center;
+        }
+        .hsw_left i
+        {
+            color: White;
+        }
+        .hsw_right
+        {
+            float: right;
+            width: .3rem;
+            height: .3rem;
+            line-height: .3rem;
+            text-align: center;
+        }
+        .hsw_right i
+        {
+            color: White;
+        }   
+        .hsw_right svg 
+        {
+            height:20px;
+            margin-top: .05rem;
+            fill: white;
+        }
+        .hsw_right span
+        {
+            display:inline-block;
+            height:.2rem;
+            width:.2rem;
+            line-height:.2rem;
+            text-align:center;
+            border: 1px solid white;
+            border-radius: .1rem;    
+            margin-top:.05rem;
+            color: white;
+        }
+        .hsw_middle
+        {
+            width: 100%;
+            height: 100%;
+            padding: 0 .5rem;
+            /*background: gold;*/
+        }
+        .hswm_search
+        {
+            width: 100%;
+            height: 100%;
+            line-height: .3rem;
+            text-align: center;
+            background: white;
+            display:none
+        }
+        .hswm_search svg
+        {
+            height: 12px;
+            vertical-align: middle;
+            margin-top: -.02rem;
+        }
+        .hswm_search span
+        {
+            height: 12px;
+            color: Gray;
+        }
+        /*内容*/
+        .container 
+        {
+            position:absolute;
+            top:1rem;
+            bottom:0;
+            left:0;
+            background:white;
+            width:100%;    
+        }
+        .brandIcon
+        {
+            position:absolute;
+            left:50%;
+            top:-.4rem;
+            margin-left:-.3rem;
+            width:.6rem;
+            height:.6rem;
+            background:red;    
+        }
+        .favoriteIcon 
+        {
+            position:absolute;
+            right:0;
+            top:-.15rem;
+            margin-right:.1rem;
+            width:.3rem;
+            height:.3rem;
+            line-height:.3rem;
+            text-align:center;
+            border-radius:.15rem;
+            background:red;
+                
+        }
+        /*里层滚动*/
+        .brandName 
+        {
+            width:100%;
+            padding: .1rem;
+            padding-top: .2rem;
+            text-align:center;
+        }
+        .brandName span 
+        {
+            font-size:14px;
+            font-weight:bold;
+            color: Black;
+        }
+        .evalute
+        {
+            text-align:center;    
+        }
+        .threshold
+        {
+            font-size:0;
+            letter-spacing: -3px;    
+            text-align:center;
+            margin-top:.1rem;
+        }
+        .threshold span 
+        {
+            font-size:12px;
+            letter-spacing:0;
+            padding:.01rem .05rem;
+            background:#fcd710;
+                
+        }
+        .threshold span:nth-child(2)
+        {
+            border-top-right-radius:5px;
+            border-bottom-right-radius:5px;
+        }
+        .threshold span:nth-child(3)
+        {
+            border-top-left-radius:5px;
+            border-bottom-left-radius:5px;
+        }
+        .announceHide
+        {
+            padding:.1rem;    
+        }
+        .c_fullReduction 
+        {
+            margin-bottom:.1rem;
+            text-align:left;
+        }
+        .c_fullReduction > i 
+        {
+            background:pink;
+            border:#eee;
+        }
+        .container_inner
+        {
+            overflow-y:scroll;
+            margin-top:.1rem;
+            height:3.37rem;
+            width:100%;
+            background:blue;     
+            display:none;
+        }
+        .container_inner_bottom
+        {
+            height:.3rem;
+            line-height:.3rem;
+            width:100%;
+            background:red;
+            text-align:center;
+            display:none;
+        }
+        .ci_item
+        {
+            padding:0 .1rem;    
+        }
+        .ci_title 
+        {
+            padding_bottom:.1rem;    
+        }
+        .ci_title span 
+        {
+            font-size:14px;
+            color:Black;
+            font-weight:bold;    
+        }
+        .ci_title i 
+        {
+            margin-top:.05rem;    
+        }
+        .cii_item
+        {
+            padding:.1rem 0;
+        }
+        .cii_item i 
+        {
+            background: pink;
+            border: #eee;
+            color:#ea8f9f;
+            margin-right:.1rem;    
+        }
+        /*外层滚动*/
+        .container_outer 
+        {
+            position:absolute;
+            top:1.63rem;
+            bottom:0;
+            left:0;
+            width:100%;
+            /*overflow:hidden;*/
+            background:white;
+        }
+        .coc_middle
+        {
+            position: absolute;
+            width:100%;
+            overflow:hidden;
+            
+	        /* Prevent elements to be highlighted on tap */
+	        -webkit-tap-highlight-color: rgba(0,0,0,0);
+	        /* Put the scroller into the HW Compositing layer right from the start */
+	        -webkit-transform: translateZ(0);
+	        -moz-transform: translateZ(0);
+	        -ms-transform: translateZ(0);
+	        -o-transform: translateZ(0);
+	        transform: translateZ(0);
+        }
+        .co_top
+        {
+            position:relative;
+            width:100%;
+            height:.3rem;
+            padding:0 .1rem;
+        }
+        .con_top_position 
+        {
+            position:fixed;
+            top:.5rem;
+            z-index:1;
+            background:white;
+        }
+        .cot_item
+        {
+            float:left;
+            width:33.333%;
+            height:.3rem;
+            text-align:center;
+            border-bottom:1px solid black;
+        }
+        .cot_item span 
+        {   
+            display:inline-block;
+            height:.3rem; 
+            line-height:.3rem;
+        }
+        .cot_item_active 
+        {
+            border-bottom:2px solid blue;
+        }
+        .bottomLine
+        {
+            position:absolute;
+            bottom:1px;
+            left:35px;
+            width:48px;
+            height:2px;
+            background:blue;
+        }
+        .co_container
+        {
+            width:100%;
+            /*height:2.75rem;*/
+            overflow:hidden;
+        }
+        #carouselScroller 
+        {
+            width:300%; 
+            overflow:hidden;
+        }
+        .cocm_item
+        {
+            float:left;
+            width:33.333%;
+            overflow:hidden;
+            background:gold;
+        }
+        /*最最最外层滚动*/
+        .lastOuterScroller 
+        {
+            width:100%;
+            overflow:hidden;    
+        }
+        .los_carousel
+        {
+            width:100%;
+            padding:.1rem;
+        }
+        .losc_title
+        { 
+            padding:.1rem 0;
+        }
+        .losc_title span
+        {
+            font-size:14px;
+            font-weight:bold;
+            color:Black;
+        }
+        .losc_container
+        {
+            position:relative;
+            width:100%;
+            height:2rem;
+            overflow:hidden;    
+        }
+        .loscc_scroller
+        {
+            position:absolute;
+            left:0;
+            top:0;
+            width:8.9rem;
+            height:100%;    
+        }
+        .loscc_item
+        {
+            float:left;
+            width:1rem;
+            height:100%;
+            background:blue;
+            margin-right:.1rem;    
+        }
+        .loscc_item:last-child
+        {
+            margin-right:0;    
+        }
+    </style>
+</head>
+<body>
+    <div class='innerWrapper'>
+        <div class="header">
+        <img src="_image/testImage.jpg" alt="Alternate Text" />
+        <div class="h_searchWrapper">
+            <div class="hsw_left">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="hsw_right">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+            <div class="hsw_right spell">
+                <span>拼</span>
+            </div>
+            <div class="hsw_right spell">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16"><path fill-opacity="1" d="M14.778 13.732a.739.739 0 1 1-1.056 1.036l-2.515-2.565a.864.864 0 0 1-.01-1.206 4.894 4.894 0 0 0 1.357-3.651c-.126-2.492-2.156-4.52-4.648-4.647a4.911 4.911 0 0 0-5.16 5.163c.126 2.475 2.13 4.496 4.605 4.642.451.026.896-.008 1.326-.1a.739.739 0 0 1 .308 1.446c-.56.12-1.137.164-1.72.13-3.227-.19-5.83-2.815-5.995-6.042a6.39 6.39 0 0 1 6.71-6.715c3.25.165 5.884 2.8 6.05 6.048a6.37 6.37 0 0 1-1.374 4.3l2.12 2.161z"></path></svg>
+            </div>
+            <div class="hsw_middle">
+                <div class="hswm_search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16"><path fill-opacity=".38" d="M14.778 13.732a.739.739 0 1 1-1.056 1.036l-2.515-2.565a.864.864 0 0 1-.01-1.206 4.894 4.894 0 0 0 1.357-3.651c-.126-2.492-2.156-4.52-4.648-4.647a4.911 4.911 0 0 0-5.16 5.163c.126 2.475 2.13 4.496 4.605 4.642.451.026.896-.008 1.326-.1a.739.739 0 0 1 .308 1.446c-.56.12-1.137.164-1.72.13-3.227-.19-5.83-2.815-5.995-6.042a6.39 6.39 0 0 1 6.71-6.715c3.25.165 5.884 2.8 6.05 6.048a6.37 6.37 0 0 1-1.374 4.3l2.12 2.161z"></path></svg>
+                    <span>想要什么搜一搜</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+   
+   
+    <div class="container">
+        <div class="brandIcon">
+        </div>
+        <div class="favoriteIcon">
+        </div>
+        <!--里层滚动-->
+        <div class="brandName">
+            <span>华莱士(玖熙国际店)</span>
+        </div>
+        <div class="evalute">
+            评价<span>4.7</span> 月售<span>924</span> 商家配送约<span>48</span>分钟
+        </div>
+        <div class="threshold">
+            <span>￥8</span> <span><i class="fas fa-crown"></i>无门槛</span> <span>领取</span>
+        </div>
+        <div class="announceHide">
+            <div class="c_fullReduction">
+                <i>满减</i> <span>满30减7, 满58减25</span> <span class="fr">三个优惠<i class="fas fa-chevron-down"
+                    style="margin-left: .1rem;"></i></span>
+            </div>
+            <div class="c_announce">
+                <span>公告:温馨提示:订餐时间9:00-20:00.配送时间...</span>
+            </div>
+        </div>
+        <div class="container_inner">
+            <div class="ci_item">
+                <div class="ci_title">
+                    <span>优惠</span> <i class="fas fa-chevron-up fr"></i>
+                </div>
+                <div class="ci_fullReduction cii_item">
+                    <i>满减</i> <span>满30减7, 满58减25</span>
+                </div>
+                <div class="ci_memeber cii_item">
+                    <i>会员</i> <span>超级会员领取8元无门槛红包</span>
+                </div>
+                <div class="ci_firstOrder cii_item">
+                    <i>首单</i> <span>新用户下单立减17元(不与其他活动同享)</span>
+                </div>
+            </div>
+            <div class="ci_item">
+                <div class="ci_title">
+                    <span>服务</span>
+                </div>
+                <div class="cii_item clearfix">
+                    <span style="float: left; height: .3rem"><i>开发票</i></span> <span>该商家支持开发票，请在下单时填好发票抬头</span>
+                </div>
+            </div>
+            <div class="ci_item">
+                <div class="ci_title">
+                    <span>公告</span>
+                </div>
+                <div class="cii_item">
+                    <span>温馨提示:订餐时间9:00-20:00.配送时间10:30-最后一单配送完毕</span>
+                </div>
+            </div>
+        </div>
+        <div class="container_inner_bottom">
+            <i class="fas fa-chevron-up"></i>
+        </div>
+        <!--外层滚动-->
+        <div id="mainWrapper" class="container_outer">
+            <div id="scroller" class="coc_middle">
+                <div class="co_top">
+                    <div class="cot_item">
+                        <span>活动介绍</span></div>
+                    <div class="cot_item">
+                        <span>优惠卷领取</span></div>
+                    <div class="cot_item">
+                        <span>详情介绍</span></div>
+                    <div class="bottomLine">
+                    </div>
+                </div>
+                <div id="carouselWrapper" class="co_container">
+                    <div id="carouselScroller">
+                        <div class="cocm_item">
+                            <div class="lastOuterScroller">
+                                <div class="los_carousel">
+                                    <div class="losc_title">
+                                        <span>商家推荐</span>
+                                    </div>
+                                    <div class="losc_container">
+                                        <div class="loscc_scroller">
+                                            <div class="loscc_item"></div>
+                                            <div class="loscc_item"></div>
+                                            <div class="loscc_item"></div>
+                                            <div class="loscc_item"></div>
+                                            <div class="loscc_item"></div>
+                                            <div class="loscc_item"></div>
+                                            <div class="loscc_item"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 100%; height: 3rem; background: red;">
+                            </div>
+                            <div style="width: 100%; height: 3rem; background: blue;">
+                            </div>
+                        </div>
+                        <div class="cocm_item" style="background: blue">
+                            <div style="width: 100%; height: 3rem;">
+                            </div>
+                        </div>
+                        <div class="cocm_item" style="background: red">
+                            <div style="width: 100%; height: 3rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
