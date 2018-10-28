@@ -27,6 +27,7 @@ window.onload = function() {
 
     //    commodityDetail.init();
     //    commodityDetail.clickAnnouncement();
+    commodityDetail.initSwiper();
     commodityDetail.initScroll();
 }
 
@@ -172,7 +173,7 @@ var commodityDetail = (function() {
                     $('.header').removeClass('headerPosition');
                 }
 
-                if (y <= -213) {
+                if (y <= -243) {
                     $('.co_top').appendTo('body').addClass('con_top_position');
                     $('.co_container').css('margin-top', '.3rem');
                 } else {
@@ -180,11 +181,11 @@ var commodityDetail = (function() {
                     $('.co_container').css('margin-top', 0)
                 }
 
-                if (y < -213 && this.startY > -213 || y > -213 && this.startY < -213) {
-                    this.options.subMagin = -213;
-                    this._translate(0, -213);
+                if (y < -243 && this.startY > -243 || y > -243 && this.startY < -243) {
+                    this.options.subMagin = -243;
+                    this._translate(0, -243);
                     $('#scroller').css('transform', 'translate(0,0)');
-                    $('.container').css('transform', 'translateY(' + -213 + 'px)');
+                    $('.container').css('transform', 'translateY(' + -243 + 'px)');
                 }
 
                 // 设置 二级 定位
@@ -211,11 +212,40 @@ var commodityDetail = (function() {
                 }
             }
 
+            function cancelScroll() {
+                var y = this.y >> 0;
+
+                $('#scroller').css('transform', 'translate(0,0)');
+                $('.container').css('transform', 'translateY(' + y + 'px)');
+            }
+
             mainScroll.on('scroll', animateScroll);
-            mainScroll.on('scrollEnd', animateScroll); 
+            mainScroll.on('scrollEnd', animateScroll);
+            mainScroll.on('scrollCancel', cancelScroll);
+
         },
         initSwiper: function() {
-
+            function setBorderProgress(index) {
+                var index = index ? index : 0;
+                var firstLineWidth = $('.headItem span').eq(index).width();
+                console.log(firstLineWidth);
+                $('.border-line').css({ height: 2, width: firstLineWidth, background: 'black', 'margin-left': 10, transition: 'width .1s' })
+            }
+            // setBorderProgress();
+            var mySwiper = new Swiper('.swiper-container', {
+                autoplay: false, //可选选项，自动滑动
+                autoHeight: true, //enable auto height
+                resistanceRatio: 0,
+                on: {
+                    setTranslate: function(translate) {
+                        console.log(translate);
+                        $('.border-line').css({ transform: 'translateX(' + -translate / 3 + 'px)' });
+                    },
+                    slideChangeTransitionStart: function() {
+                        $('.border-line').css({ width: setBorderProgress(this.activeIndex) });
+                    },
+                }
+            })
         }
     }
 })();
