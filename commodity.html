@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html style="font-size: 100px;">
-
 <head>
     <!-- meta使用viewport以确保页面可自由缩放 -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,33 +7,34 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <!-- 引入 底层css 样式 -->
-    <link type="text/css" rel="stylesheet" href="common.css" />
-    <!-- <link type="text/css" rel="stylesheet" href="/Mobile/WeChat/_css/CommonPartially.css" /> -->
+    <link type="text/css" rel="stylesheet" href="/Mobile/WeChat/_css/common.css" />
+    <link type="text/css" rel="stylesheet" href="/Mobile/WeChat/_css/CommonPartially.css" />
     <!--字体样式-->
-    <!--     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
         integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-        crossorigin="anonymous"> -->
+        crossorigin="anonymous">
     <!--轮播swiper.css-->
-    <link rel="stylesheet" href="swiper-4.3.5/dist/css/swiper.min.css">
-    <!-- <link href="/_control/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
-    <!-- <link href="/_control/layui/css/layui.css" rel="stylesheet" type="text/css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.1.0/css/swiper.min.css">
+    <!--<link href="/_control/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />-->
+    <!--<link href="/_control/layui/css/layui.css" rel="stylesheet" type="text/css" />-->
     <!--引入pullToRefresh.css-->
-    <link rel="stylesheet" type="text/css" href="reset.css" />
-    <link rel="stylesheet" type="text/css" href="pullToRefresh.css" />
+    <link rel="stylesheet" type="text/css" href="/Mobile/WeChat/_control/scroll/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/Mobile/WeChat/_control/scroll/pullToRefresh.css" />
     <!-- 引入 底层Js 库-->
     <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_js/jquery.min.js"></script>
-    <script type="text/javascript" language="javascript" src="common.js"></script>
+    <!--<script type="text/javascript" language="javascript" src="https://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>-->
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_js/common.js"></script>
     <!-- 引入 layer 库-->
-    <!-- <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_control/layer_mobile/layer.js"></script> -->
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_control/layer_mobile/layer.js"></script>
     <!-- 引入Swiper轮播插件-->
-    <script src="swiper-4.3.5/dist/js/swiper.min.js"></script>
-    <!--引入IScroll-probe.js-->
-    <script src="iscroll-probe.js"></script>
-    <script type="text/javascript" language="javascript" src="pullToRefresh_probe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.1.0/js/swiper.min.js"></script>
+    <!--引入IScroll.js-->
+    <script src="/Mobile/WeChat/_control/scroll/iscroll-probe.js"></script>
+    <script type="text/javascript" language="javascript" src="/Mobile/WeChat/_control/scroll/pullToRefresh.js"></script>
     <!--腾讯 定位-->
-    <!-- <script type="text/javascript" charset="utf-8" src="https://apis.map.qq.com/tools/geolocation/min?key=EXMBZ-JFFRO-UGVWP-SLOZU-NUGXJ-UIBWJ&referer=gzjsoft"></script> -->
+    <script type="text/javascript" src='https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js '></script>
     <!--引入自身js-->
-    <script type="text/javascript" language="javascript" src="commodity.js"></script>
+    <script type="text/javascript" language="javascript" src="commodityDetail.js"></script>
     <title>会员中心</title>
     <style>
     * {
@@ -70,7 +70,7 @@
     .headerPosition {
         position: fixed;
         z-index: 1;
-        clip: rect(0, 320px, 50px, 0);
+        
     }
 
     .header img {
@@ -298,7 +298,7 @@
     /*外层滚动*/
     .container_outer {
         position: absolute;
-        top: 1.93rem;
+        top: 1.95rem;
         bottom: 0;
         left: 0;
         width: 100%;
@@ -320,12 +320,15 @@
         -o-transform: translateZ(0);
         transform: translateZ(0);
     }
-
+    .selectWrapper  
+    {
+        width:100%;    
+    }
     .co_top {
         position: relative;
         width: 100%;
         height: .3rem;
-        padding: 0 .1rem;
+        line-height:.3rem;
     }
 
     .con_top_position {
@@ -338,125 +341,301 @@
     .cot_item {
         float: left;
         width: 33.333%;
-        height: .3rem;
-        text-align: center;
-        border-bottom: 1px solid black;
+        height:100%;
+        text-align:center;
     }
 
     .cot_item span {
         display: inline-block;
-        height: .3rem;
-        line-height: .3rem;
+        height: 100%;
+        padding:0 5px;
+        transition: color .3s
     }
 
     .cot_item_active {
         border-bottom: 2px solid blue;
     }
 
-    .bottomLine {
-        position: absolute;
-        bottom: 1px;
-        left: 35px;
-        width: 48px;
-        height: 2px;
-        background: blue;
+    #carouselScroller {
+        width: 300%;
+        overflow: hidden;
     }
-
-
+    /*滚动部分*/
     .cocm_item {
-        width: 100%;
         overflow: hidden;
-        background: gold;
+    } 
+    .cocm_item_headImg 
+    {
+      width:100%;
+      height:1rem;
+      padding:10px;
+      overflow:hidden;      
     }
-
-    /*最最最外层滚动*/
-    .lastOuterScroller {
-        width: 100%;
-        overflow: hidden;
+    .cocm_item_headImg img 
+    {
+        width:100%;
+        height:100%;
     }
-
-    .los_carousel {
-        width: 100%;
-        padding: .1rem;
+    
+    .specialPriceShow 
+    {
+        padding:10px 10px;
+        height:.4rem;
+        color:black; 
+        font-size:14px;
+        font-weight:bold;      
     }
-
-    .losc_title {
-        padding: .1rem 0;
+    .specialPriceShowImg
+    {
+     padding:0 10px;       
     }
-
-    .losc_title span {
-        font-size: 14px;
-        font-weight: bold;
-        color: Black;
+    .spsi_wrapper
+    {
+        position:relative;
+        width:100%;
+        height:100%;
+        border: 1px solid #EEE;
+        border-radius:10px;
+        overflow:hidden;
     }
-
-    .losc_container {
-        position: relative;
-        width: 100%;
-        height: 2rem;
-        overflow: hidden;
+    .spsi_wrapper:after
+    {
+        content: '';
+        position:absolute;
+        bottom:0;
+        width:96%;
+        margin-left:2%;
+        height: 1px;
+        background: rgba(128,128,128, .6);
     }
-
-    .loscc_scroller {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 8.9rem;
-        height: 100%;
+    .spsi_introduce
+    {
+        display:block;
+        font-weight:bold;
+        font-size:14px;
+        margin-left: .05rem;
+            
     }
-
-    .loscc_item {
-        float: left;
-        width: 1rem;
-        height: 100%;
-        background: blue;
+    .spsi_month_sale
+    {
+        display:block;
+        font-size:12px;
+        margin-left: .05rem;
+        margin-bottom: .1rem;
+        color:Gray;    
+    }
+    .spsi_left 
+    {
+        margin-left: .05rem;
+        color: red;
+        font-size:14px;    
+    }
+    .spsi_left i 
+    {
+        color:Gray;
+        text-decoration: line-through;
+    }
+    .spsi_right 
+    {
+        position:absolute;
+        right:.05rem;
+        bottom:.05rem;
+        width: 30px;
+        height: 30px;
+        background:blue;
+        border-radius: 50%;
+        outline: 10px solid white;
+        outline-offset: -24px;
+    }
+    /*商品列表*/
+    .GoodsList 
+    {
+        margin-top:.2rem;
+        width:100%;
+    }
+     
+     
+     
+    .clearfix:after
+    {
+        visibility:hidden;
+        display:block;
+        font-size:0;
+        content: " ";
+        clear:both;
+        height:0;
+    }
+    .clearfix
+    { 
+        zoom:1;
+    }
+     
+     
+     
+     
+     
+     
+     
+    .leftNav 
+    {
+        position:relative;
+        z-index:2;
+        float:left;
+        width: .6rem;
+        overflow:hidden;
+        background:#EEE;
+    }
+    .leftNav li
+    {
+        width:100%;
+        padding: .1rem .05rem;
+    }
+    .leftNav .hot 
+    {
+        font-weight:bold;       
+        background:white;
+    }
+    .hot span 
+    {
+        display:inline-block;
+        width:.2rem;
+        height:20px;
+        margin-right:.05rem;
+        vertical-align:middle;
+        background:red;
+    }
+    .hot i 
+    {
+        margin-left: .05rem;
+        color:White;
+    }
+    .leftNav .dicount 
+    {
+        background:#eee;    
+    }
+    .rightNav 
+    {
+        width:100%;
+        height:1000px;
+        /*background:gold;*/
+    }
+    .rightNav li
+    {
+        width:100%;
+        padding-left:.7rem;
+    }
+    .rn_title
+    {
+        position:relative;
+        z-index:1;
+        width:100%;
+        height:.4rem;
+        padding:.1rem .1rem .1rem 0;
+        font-weight:bold;
+        background:white;
+    }
+    .active_rn_title 
+    {
+        padding-left: .7rem;
+    }
+     .rn_title i 
+    {
+       color:Gray;
+       font-size:12px;
+    }
+    /*内容*/
+    .rn_content 
+    {
+        width:100%;
+        line-height: 18px;
+        margin-bottom: .2rem;
+    }
+    .rn_content:last-child
+    {
+        padding-bottom:.4rem;
+        margin-bottom: 0;
+    }
+    .rnc_left 
+    {
+        float:left;
+        width:.8rem;
+        height:.8rem;
+        margin-right:.1rem;
+    }
+    .rnc_left img 
+    {
+        width:100%; 
+        height:100%;    
+    }
+    .rn_content span 
+    {
+        display:block;    
+    }
+    .rnc_theme 
+    {
+        font-weight:bold;
+        font-size:14px;    
+    }
+    .rnc_name 
+    {
+        
+    }
+    .rnc_sale_evalute 
+    {
+        color: Red;    
+    }
+    .rnc_sale_evalute  i 
+    {
+        padding: 2px 2px;    
+    }
+    .rnc_bottom span 
+    {
+        color: Red;
+        display:inline-block;
+    }
+    .rnc_bottom i:nth-child(2)
+    {
+        text-decoration: line-through;    
+    }
+    .rnc_bottom i:nth-child(3) 
+    {
+        float: right;
+        width: 20px;
+        height: 20px;
         margin-right: .1rem;
+        margin-top: 0rem;
+        border-radius: 100%;
+        outline: 7px solid white;
+        outline-offset: -16px;
+        background: blue;
     }
-
-    .loscc_item:last-child {
-        margin-right: 0;
-    }
-
-    .purple_test {
-        position: fixed;
-        top: .8rem;
-        z-index: 1;
-    }
-
-    /*大轮播*/
-    .swiper-container {
-        width: 100%;
-        height: auto;
-    }
+    
     </style>
 </head>
-
 <body>
-    <div class='innerWrapper'>
-        <div class="header">
-            <img src="images/carouse7.png" alt="Alternate Text" />
-            <div class="h_searchWrapper">
-                <div class="hsw_left">
-                    <i class="fas fa-arrow-left"></i>
-                </div>
-                <div class="hsw_right">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="hsw_right spell">
-                    <span>拼</span>
-                </div>
-                <div class="hsw_right spell">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16">
+    <div class="header">
+        <img src="_image/testImage.jpg" alt="Alternate Text" />
+        <div class="h_searchWrapper">
+            <div class="hsw_left">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="hsw_right">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+            <div class="hsw_right spell">
+                <span>拼</span>
+            </div>
+            <div class="hsw_right spell">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16">
                         <path fill-opacity="1" d="M14.778 13.732a.739.739 0 1 1-1.056 1.036l-2.515-2.565a.864.864 0 0 1-.01-1.206 4.894 4.894 0 0 0 1.357-3.651c-.126-2.492-2.156-4.52-4.648-4.647a4.911 4.911 0 0 0-5.16 5.163c.126 2.475 2.13 4.496 4.605 4.642.451.026.896-.008 1.326-.1a.739.739 0 0 1 .308 1.446c-.56.12-1.137.164-1.72.13-3.227-.19-5.83-2.815-5.995-6.042a6.39 6.39 0 0 1 6.71-6.715c3.25.165 5.884 2.8 6.05 6.048a6.37 6.37 0 0 1-1.374 4.3l2.12 2.161z"></path>
                     </svg>
-                </div>
-                <div class="hsw_middle">
-                    <div class="hswm_search">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16">
+            </div>
+            <div class="hsw_middle">
+                <div class="hswm_search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16">
                             <path fill-opacity=".38" d="M14.778 13.732a.739.739 0 1 1-1.056 1.036l-2.515-2.565a.864.864 0 0 1-.01-1.206 4.894 4.894 0 0 0 1.357-3.651c-.126-2.492-2.156-4.52-4.648-4.647a4.911 4.911 0 0 0-5.16 5.163c.126 2.475 2.13 4.496 4.605 4.642.451.026.896-.008 1.326-.1a.739.739 0 0 1 .308 1.446c-.56.12-1.137.164-1.72.13-3.227-.19-5.83-2.815-5.995-6.042a6.39 6.39 0 0 1 6.71-6.715c3.25.165 5.884 2.8 6.05 6.048a6.37 6.37 0 0 1-1.374 4.3l2.12 2.161z"></path>
                         </svg>
-                        <span>想要什么搜一搜</span>
-                    </div>
+                    <span>想要什么搜一搜</span>
                 </div>
             </div>
         </div>
@@ -520,17 +699,20 @@
         <div class="container_inner_bottom">
             <i class="fas fa-chevron-up"></i>
         </div>
-        <div class="co_top">
-            <div class="cot_item">
-                <span>活动介绍</span></div>
-            <div class="cot_item">
-                <span>优惠卷领取</span></div>
-            <div class="cot_item">
-                <span>详情介绍</span></div>
-            <div class="bottomLine">
+        <!--选项卡-->
+        <div class='selectWrapper'>
+            <div class="co_top">
+                <div class="cot_item">
+                    <span>活动介绍</span></div>
+                <div class="cot_item">
+                    <span>优惠卷领取</span></div>
+                <div class="cot_item">
+                    <span>详情介绍</span></div>
+            </div>
+            <!--分割线-->
+            <div class="border-line">
             </div>
         </div>
-        <div class='border-line'></div>
         <!--外层滚动-->
         <div id="mainWrapper" class="container_outer">
             <div id="scroller" class="coc_middle">
@@ -539,27 +721,465 @@
                     <div class='swiper-wrapper'>
                         <div class="swiper-slide">
                             <div class="cocm_item">
-                                <div class="lastOuterScroller">
-                                    <div class="los_carousel">
-                                        <div class="losc_title">
-                                            <span>商家推荐</span>
-                                        </div>  
-                                        <div class="losc_container">
-                                            <div class="loscc_scroller">
-                                                <div class="loscc_item"></div>
-                                                <div class="loscc_item"></div>
-                                                <div class="loscc_item"></div>
-                                                <div class="loscc_item"></div>
-                                                <div class="loscc_item"></div>
-                                                <div class="loscc_item"></div>
-                                                <div class="loscc_item"></div>
+                                <div class="cocm_item_headImg">
+                                    <img src="_image/梅花.jpg" /></div>
+                                <div class="specialPriceShow">
+                                    今日商品特价优惠</div>
+                                <!--swiper嵌套-->
+                                <div class="specialPriceShowImg">
+                                    <div class="swiper-container-nest">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide" style='height: 1.8rem'>
+                                                <div class="spsi_wrapper">
+                                                    <img src="_image/梅花.jpg" style="width: 100%; height: 1rem" />
+                                                    <span class='spsi_introduce'>香辣 至尊牛排</span> <span class="spsi_month_sale">月售<i>22</i></span>
+                                                    <div class="spsi_bottom">
+                                                        <span class="spsi_left">￥10.99<i>￥9.99</i></span> <span class="spsi_right"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-slide" style='height: 1.8rem'>
+                                                <div class="spsi_wrapper">
+                                                    <img src="_image/梅花.jpg" style="width: 100%; height: 1rem" />
+                                                    <span class='spsi_introduce'>香辣 至尊牛排</span> <span class="spsi_month_sale">月售<i>22</i></span>
+                                                    <div class="spsi_bottom">
+                                                        <span class="spsi_left">￥10.99<i>￥9.99</i></span> <span class="spsi_right"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-slide" style='height: 1.8rem'>
+                                                <div class="spsi_wrapper">
+                                                    <img src="_image/梅花.jpg" style="width: 100%; height: 1rem" />
+                                                    <span class='spsi_introduce'>香辣 至尊牛排</span> <span class="spsi_month_sale">月售<i>22</i></span>
+                                                    <div class="spsi_bottom">
+                                                        <span class="spsi_left">￥10.99<i>￥9.99</i></span> <span class="spsi_right"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-slide" style='height: 1.8rem'>
+                                                <div class="spsi_wrapper">
+                                                    <img src="_image/梅花.jpg" style="width: 100%; height: 1rem" />
+                                                    <span class='spsi_introduce'>香辣 至尊牛排</span> <span class="spsi_month_sale">月售<i>22</i></span>
+                                                    <div class="spsi_bottom">
+                                                        <span class="spsi_left">￥10.99<i>￥9.99</i></span> <span class="spsi_right"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-slide" style='height: 1.8rem'>
+                                                <div class="spsi_wrapper">
+                                                    <img src="_image/梅花.jpg" style="width: 100%; height: 1rem" />
+                                                    <span class='spsi_introduce'>香辣 至尊牛排</span> <span class="spsi_month_sale">月售<i>22</i></span>
+                                                    <div class="spsi_bottom">
+                                                        <span class="spsi_left">￥10.99<i>￥9.99</i></span> <span class="spsi_right"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-slide" style='height: 1.8rem'>
+                                                <div class="spsi_wrapper">
+                                                    <img src="_image/梅花.jpg" style="width: 100%; height: 1rem" />
+                                                    <span class='spsi_introduce'>香辣 至尊牛排</span> <span class="spsi_month_sale">月售<i>22</i></span>
+                                                    <div class="spsi_bottom">
+                                                        <span class="spsi_left">￥10.99<i>￥9.99</i></span> <span class="spsi_right"></span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class='test' style="width: 100%; height: 3rem; background: red;">
-                                </div>
-                                <div class='purple' style="width: 100%; height: .3rem; background: purple;">
+                                <!--商品列表-->
+                                <div class="GoodsList clearfix">
+                                    <ul class='leftNav'>
+                                        <li class="hot"><span><i class="fab fa-hotjar"></i></span>热销</li>
+                                        <li class="hot dicount"><span><i class="fab fa-hotjar"></i></span>优惠</li>
+                                        <li>店长推荐金牌披萨10寸</li>
+                                        <li>单身狗套餐</li>
+                                        <li>闺蜜情侣双人餐</li>
+                                        <li>知心披萨10寸</li>
+                                        <li>手工披萨10寸7寸</li>
+                                        <li>招牌双饼披萨</li>
+                                        <li>意面/焗饭</li>
+                                        <li>小吃</li>
+                                        <li>饮品</li>
+                                        <li>加料</li>
+                                    </ul>
+                                    <ul class="rightNav">
+                                        <li>
+                                            <div class='rn_title'>
+                                                热销 <i>大家喜欢吃, 才叫真好吃</i></div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            
+                                        </li>
+                                        <li>
+                                            <div class='rn_title'>
+                                                优惠 <i>美味又实惠, 大家快来抢</i></div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                        </li>
+                                          <li>
+                                            <div class='rn_title'>
+                                                店长推荐金牌披萨10寸</div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                            <div class='rn_content'>
+                                                <div class='rnc_left'>
+                                                    <img src="_image/梅花.jpg" />
+                                                </div>
+                                                <span class="rnc_theme">红烧肉1份+米饭1份</span> <span class="rnc_name">烧的土豆</span> <span
+                                                    class="rnc_sale_evalute">月售<i>86</i> 好评率 <i>86</i>%</span> <span class="rnc_discount">
+                                                        <i>3.5折</i> 限量抢购</span>
+                                                <div class="rnc_bottom">
+                                                    <span>￥9.9</span> <i>￥28</i> <i></i>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div style="width: 100%; height: 3rem; background: blue;">
                                 </div>
@@ -571,7 +1191,7 @@
                         </div>
                         <div class="swiper-slide">
                             <div class="cocm_item" style="background: blue">
-                                <div style="width: 100%; height: 3rem;">
+                                <div style="width: 100%; height: 10rem;">
                                 </div>
                             </div>
                         </div>
@@ -587,6 +1207,4 @@
         </div>
     </div>
 </body>
-
 </html>
-<!--
