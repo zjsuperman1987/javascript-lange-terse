@@ -1,6 +1,6 @@
-PubAjax = (function() {
+PubAjax = (function () {
     return {
-        post: function(BusinessType, date, successFun, errorFun, completeFunc) {
+        post: function (BusinessType, date, successFun, errorFun, completeFunc) {
             date = date || {};
             date.voucher = ""
             if (BusinessType) {
@@ -23,8 +23,10 @@ PubAjax = (function() {
     }
 })();
 
-window.onload = function() {
 
+var mySwiper;
+
+window.onload = function () {
     //    commodityDetail.init();
     //    commodityDetail.clickAnnouncement();
     commodityDetail.initSwiper();
@@ -32,22 +34,22 @@ window.onload = function() {
 }
 
 
-var commodityDetail = (function() {
+var commodityDetail = (function () {
     return {
-        init: function() {
+        init: function () {
             var ContractGUID = PubRequest.Query("contractguid");
             var CustomerGUID = PubRequest.Query("customerGUID");
 
             PubAjax.post("selectcommodityDetail", {
-                    ContractGUID: escape(ContractGUID),
-                    CustomerGUID: escape(CustomerGUID)
-                },
-                function(result) {
+                ContractGUID: escape(ContractGUID),
+                CustomerGUID: escape(CustomerGUID)
+            },
+                function (result) {
                     $('.brandInfoTitle').text(PubRequest.Query("brandName"));
                 });
         },
         //点击公告
-        clickAnnouncement: function() {
+        clickAnnouncement: function () {
             //公告
             var slide = document.querySelector('#wrapper')
 
@@ -71,11 +73,11 @@ var commodityDetail = (function() {
             $('.iconAnnouncement').on('click', toggleSlider);
             $('.brandInfo_bottom').on('click', toggleSlider);
             //选项卡
-            $.each($('.secondMenu span'), function(i, item) {
-                item.addEventListener("touchstart", function(e) {
+            $.each($('.secondMenu span'), function (i, item) {
+                item.addEventListener("touchstart", function (e) {
                     this.classList.add("addShadow");
                 })
-                item.addEventListener("touchend", function(e) {
+                item.addEventListener("touchend", function (e) {
                     this.classList.remove("addShadow");
                     $(".secondMenu span i").removeClass("secondMenu_border_bottom").eq(i).addClass("secondMenu_border_bottom");
                     $('.secondMenuContent').hide().eq(i).show();
@@ -83,15 +85,27 @@ var commodityDetail = (function() {
             })
         },
         // 初始滚动
-        initScroll: function() {
+        initScroll: function () {
             var scaleValue = 10,
                 searchOpacity = 0,
+                arrayLiHeight = [],
+                nextPosition = 0,
+                index = 0,
+                isBoolean = true,
+                len;
 
-                mainScroll = new IScroll("#mainWrapper", {
-                    probeType: 3,
-                    bounce: false,
-                    subMagin: -213
-                });
+            // 计算滑动距离
+            $('.rightNav li').each(function (i, item) {
+                i === 0 ? arrayLiHeight.push(-$(item).outerHeight() + $('.rn_title').outerHeight()) : arrayLiHeight.push((arrayLiHeight[i - 1] - $(item).outerHeight()) + $('.rn_title').outerHeight());
+            });
+            len = arrayLiHeight.length;
+
+
+            mainScroll = new IScroll("#mainWrapper", {
+                probeType: 3,
+                bounce: false,
+                subMargin: -213
+            });
 
             // 设置临界值状态(头部动画)
             function setStatus(status) {
@@ -118,7 +132,7 @@ var commodityDetail = (function() {
             function animateScroll() {
                 var y = this.y >> 0;
 
-                // console.log(y);
+                //                console.log(y);
                 if (y <= 0) {
                     $('.container').css('transform', 'translateY(' + y + 'px)');
                     $('#scroller').css('transform', 'translate(0,0)');
@@ -165,45 +179,68 @@ var commodityDetail = (function() {
                         $('.hswm_search').hide();
                     }
                 }
+                // 头部 模糊
                 if (y <= -50) {
-                    $('.header').addClass('headerPosition');
+                    $('.header').addClass('headerPosition').css('clip', 'rect(0,' + window.clientWidth + 'px, .5rem, 0)');
                     // 开启 所有 效果 最终值 例如 opacity 1 scale 1
                     setStatus(1);
+
                 } else {
-                    $('.header').removeClass('headerPosition');
+                    $('.header').removeClass('headerPosition').css('clip', 'unset');
                 }
 
-                if (y <= -243) {
-                    $('.co_top').appendTo('body').addClass('con_top_position');
-                    $('.co_container').css('margin-top', '.3rem');
+                if (y <= -213) {
+                    $('.selectWrapper').appendTo('body').addClass('con_top_position');
                 } else {
-                    $('.co_top').prependTo('#scroller').removeClass('con_top_position')
-                    $('.co_container').css('margin-top', 0)
+                    $('.selectWrapper').insertAfter($('.container_inner_bottom')).removeClass('con_top_position');
                 }
 
-                if (y < -243 && this.startY > -243 || y > -243 && this.startY < -243) {
-                    this.options.subMagin = -243;
-                    this._translate(0, -243);
+                if (y < -213 && this.startY > -213 || y > -213 && this.startY < -213) {
+                    this.options.subMargin = -213;
+                    this._translate(0, -213);
                     $('#scroller').css('transform', 'translate(0,0)');
-                    $('.container').css('transform', 'translateY(' + -243 + 'px)');
+                    $('.container').css('transform', 'translateY(' + -213 + 'px)');
                 }
 
                 // 设置 二级 定位
 
-                if (y <= -774) {
-                    $('.purple').appendTo('body').addClass('purple_test');
-                    $('.test').css('margin-top', '.3rem');
+                if (y <= -553) {
+                    if (isBoolean) {
+                        $('.GoodsList .leftNav').appendTo('body').css('margin-top', '.82rem');
+                        $('.rightNav li').eq(0).find('.rn_title').appendTo('body').addClass('active_rn_title').css({ 'margin-top': '.82rem' });
+                        $('.rightNav li').eq(0).css('margin-top', '.4rem');
+                    }
+
+                    nextPosition = -553 + arrayLiHeight[index];
+                    console.log(nextPosition, y)
+                    if (y < -1790) {
+                        index++;
+                        isBoolean = false;
+                        //                        $('.active_rn_title').appendTo($('.rightNav li').eq(index - 1)[0]).removeClass('active_rn_title').css('margin-top', 0);
+                        //                        $('.rightNav li').eq(index).find('.rn_title').appendTo($('.rightNav li').eq(index - 1)[0]);
+
+                        $('.active_rn_title').appendTo($('.rightNav li').eq(index - 1)).removeClass('active_rn_title').css('margin-top',0);
+
+
+                    }
+                    //                    else {
+                    //                        $('body .rn_title').prependTo($('rightNav li').eq(index)).css({ 'margin-top': 0, 'padding-left': '.1rem' });
+                    //                        index--;
+                    //                    }
+
+
                 } else {
-                    $('.purple').insertAfter($('.test')).removeClass('purple_test')
-                    $('.test').css('margin-top', 0)
+                    $('.leftNav').prependTo($('.GoodsList')[0]).css('margin-top', 0)
+                    $('body>.rn_title').prependTo($('rightNav li').eq(0)).css({ 'margin-top': 0, 'padding-left': '0' });
+                    ifBoolean = true;
                 }
 
 
-                if (y < -774 && this.startY > -774 || y > -774 && this.startY < -774) {
-                    this.options.subMagin = -774;
-                    this._translate(0, -774);
+                if (y < -553 && this.startY > -553 || y > -553 && this.startY < -553) {
+                    this.options.subMargin = -553;
+                    this._translate(0, -553);
                     $('#scroller').css('transform', 'translate(0,0)');
-                    $('.container').css('transform', 'translateY(' + -774 + 'px)');
+                    $('.container').css('transform', 'translateY(' + -553 + 'px)');
                 }
 
                 if (y === 0) {
@@ -211,7 +248,6 @@ var commodityDetail = (function() {
                     setStatus();
                 }
             }
-
             function cancelScroll() {
                 var y = this.y >> 0;
 
@@ -219,33 +255,70 @@ var commodityDetail = (function() {
                 $('.container').css('transform', 'translateY(' + y + 'px)');
             }
 
+
+            mainScroll.on('scrollCancel', cancelScroll);
             mainScroll.on('scroll', animateScroll);
             mainScroll.on('scrollEnd', animateScroll);
-            mainScroll.on('scrollCancel', cancelScroll);
-
         },
-        initSwiper: function() {
-            function setBorderProgress(index) {
-                var index = index ? index : 0;
-                var firstLineWidth = $('.headItem span').eq(index).width();
-                console.log(firstLineWidth);
-                $('.border-line').css({ height: 2, width: firstLineWidth, background: 'black', 'margin-left': 10, transition: 'width .1s' })
+        initSwiper: function () {
+            // 点击 选项卡 阴影 
+            function clickColor(elArray) {
+                $.each(elArray, function (i, item) {
+                    item.addEventListener('touchstart', function () {
+                        this.style.background = 'rgba(128,128,128, .5)';
+                    });
+                    item.addEventListener('touchend', function () {
+                        this.style.background = 'white';
+                    });
+                })
             }
-            // setBorderProgress();
-            var mySwiper = new Swiper('.swiper-container', {
+
+            // 初始化中间分割线
+            function setCss(index) {
+                var index = index ? index : 0;
+                var firstLineWidth = $('.co_top span').eq(index).outerWidth(),
+                margin = ($('.co_top .cot_item').eq(0).outerWidth() - firstLineWidth) / 2;
+                $('.border-line').css({ width: firstLineWidth, 'margin-left': margin, height: 2, background: '#1B8CE0', transition: 'width .1s' });
+                $('.co_top span').css('color', 'black').eq(index).css('color', '#1B8CE0');
+            }
+
+            setCss();
+
+            // 初始化swiper
+            mySwiper = new Swiper('.swiper-container', {
                 autoplay: false, //可选选项，自动滑动
                 autoHeight: true, //enable auto height
                 resistanceRatio: 0,
                 on: {
-                    setTranslate: function(translate) {
+                    setTranslate: function (translate) {
                         console.log(translate);
                         $('.border-line').css({ transform: 'translateX(' + -translate / 3 + 'px)' });
                     },
-                    slideChangeTransitionStart: function() {
-                        $('.border-line').css({ width: setBorderProgress(this.activeIndex) });
-                    },
+                    slideChangeTransitionStart: function () {
+                        setCss(this.activeIndex);
+                    }
                 }
             })
+
+            clickColor($('.cot_item'));
+
+            // 监听点击切换
+            $('.co_top .cot_item').on('click', function () {
+                mySwiper.slideTo($(this).index());
+            });
+
+            var mySwiperNest = new Swiper('.swiper-container-nest', {
+                autoplay: false, //可选选项，自动滑动
+                slidesPerView: 2.1,
+                spaceBetween: 10,
+                freeMode: true,
+                nested: true,
+                resistanceRatio: 0
+            });
+
+
+
+
         }
     }
 })();
