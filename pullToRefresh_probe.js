@@ -133,7 +133,7 @@
             //滚动
             eval(parameter.id).on('scroll', function () {
                 var y = this.y >> 0;
-
+                console.log(y);
                 if (parameter.headAnimation) {
                     if (y > -pullUpOffset) {
                         // pullDownEl.id = '';
@@ -146,10 +146,9 @@
                         pullDownEl.classList.add("flip");
                         pullDownEl.querySelector('.pullDownLabel').innerHTML = refresher.info.pullingDownLable;
                         this.options.minScrollY = 0;
-
                     }
-
-                    if (this.scrollerHeight < this.wrapperHeight && y < (-pullUpOffset) || this.scrollerHeight > this.wrapperHeight && y>= this.maxScrollY - 5) {
+                    console.log(y, this.maxScrollY);
+                    if (this.scrollerHeight < this.wrapperHeight && y < (-pullUpOffset) || this.scrollerHeight > this.wrapperHeight && y <= this.maxScrollY + 5) {
                         pullUpEl.style.display = "block";
                         pullUpEl.classList.add("flip");
                         pullUpEl.querySelector('.pullUpLabel').innerHTML = refresher.info.pullingUpLable;
@@ -180,7 +179,7 @@
             //滚动结束
             eval(parameter.id).on("scrollEnd", function () {
                 var y = this.y >> 0;
-
+                 
                 if (parameter.headAnimation) {
                     if (pullDownEl.className.match('flip') /*&&!pullUpEl.className.match('loading')*/) {
                         pullDownEl.classList.add("loading");
@@ -200,7 +199,7 @@
                     }
                 }
 
-                // 自动
+                // 自动 半圆
                 if (parameter.semicircle) {
                     if (y === 0 && this.startY !== 0 && !this.options.headAnimation) {
                         semicircle_up_wrapper.style.display = 'block';
@@ -221,6 +220,7 @@
                         that.options.semicircleDragCount = 0;
                     }
                 }
+
             })
         },
         onRelease: function (pullDownEl, pullUpEl) {
