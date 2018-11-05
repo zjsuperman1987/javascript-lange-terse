@@ -27,6 +27,30 @@ PubAjax = (function () {
 var mySwiper;
 
 window.onload = function () {
+
+
+
+    // 设置 左边滚动菜单位置
+    //    var leftHeight = $('.brandName').outerHeight() +
+    //                            $('.evalute').outerHeight() +
+    //                            $('.threshold').outerHeight() +
+    //                            parseInt($('.threshold').css('marginTop')) +
+    //                            $('.announceHide').outerHeight() +
+    //                            $('.selectWrapper').outerHeight() +
+    //                            $('.cocm_item_headImg').outerHeight() +
+    //                            $('.specialPriceShow').outerHeight() +
+    //                            $('.specialPriceShowImg').outerHeight() +
+    //                            parseInt($('.GoodsList').css('marginTop'));
+
+    //    $('#leftWrapper').css('top', leftHeight);
+    //            
+
+
+
+
+
+
+
     //    commodityDetail.init();
     //    commodityDetail.clickAnnouncement();
     commodityDetail.initSwiper();
@@ -90,13 +114,16 @@ var commodityDetail = (function () {
                 searchOpacity = 0,
                 arrayLiHeight = [],
                 nextPosition = 0,
+                prevPosition = 0,
                 index = 0,
                 isBoolean = true,
+                isBottom = false,
                 len;
 
             // 计算滑动距离
             $('.rightNav li').each(function (i, item) {
-                i === 0 ? arrayLiHeight.push(-$(item).outerHeight() + $('.rn_title').outerHeight()) : arrayLiHeight.push((arrayLiHeight[i - 1] - $(item).outerHeight()) + $('.rn_title').outerHeight());
+                i === 0 ? arrayLiHeight.push(-$(item).outerHeight() + $('.rn_title').outerHeight()) : arrayLiHeight.push((arrayLiHeight[i - 1] - $(item).outerHeight()));
+                //                $(item).css('height', $(item).outerHeight() + 20);
             });
             len = arrayLiHeight.length;
 
@@ -104,7 +131,8 @@ var commodityDetail = (function () {
             mainScroll = new IScroll("#mainWrapper", {
                 probeType: 3,
                 bounce: false,
-                subMargin: -213
+                subMargin: -213,
+                scrollbars: true
             });
 
             // 设置临界值状态(头部动画)
@@ -206,36 +234,62 @@ var commodityDetail = (function () {
 
                 if (y <= -553) {
                     if (isBoolean) {
-                        $('.GoodsList .leftNav').appendTo('body').css('margin-top', '.82rem');
-                        $('.rightNav li').eq(0).find('.rn_title').appendTo('body').addClass('active_rn_title').css({ 'margin-top': '.82rem' });
+                        $('#leftWrapper').appendTo('body').css('margin-top', '.82rem');
+                        $('.rightNav li').eq(0).find('.rn_title').appendTo('body').addClass('active_rn_title');
                         $('.rightNav li').eq(0).css('margin-top', '.4rem');
+                        isBoolean = false;
                     }
 
                     nextPosition = -553 + arrayLiHeight[index];
-                    console.log(nextPosition, y)
-                    if (y < -1790) {
-                        index++;
-                        isBoolean = false;
-                        //                        $('.active_rn_title').appendTo($('.rightNav li').eq(index - 1)[0]).removeClass('active_rn_title').css('margin-top', 0);
-                        //                        $('.rightNav li').eq(index).find('.rn_title').appendTo($('.rightNav li').eq(index - 1)[0]);
-
-                        $('.active_rn_title').appendTo($('.rightNav li').eq(index - 1)).removeClass('active_rn_title').css('margin-top',0);
-
-
+                    // 上拉
+                    if (this.directionY > 0) {
+                        if (y < nextPosition) {
+                            // 把active 还原回自身li 设置bottom(添加active_rn_title_middle类)
+                            $('.active_rn_title').prependTo($('.rightNav li').eq(index)).addClass('active_rn_title_middle');
+                            prevPosition = nextPosition;
+                            index = index === len - 1 ? len - 1 : index + 1;
+                            $('.leftNav li').removeClass('activeLeft').eq(index).addClass('activeLeft');
+                        }
+                        if (prevPosition && y < prevPosition - 40) {
+                            $('.rightNav li').eq(index - 1).find('.rn_title').removeClass('active_rn_title');
+                            $('.rightNav li').eq(index)
+                                            .css('margin-top', '.4rem')
+                                            .find('.rn_title')
+                                            .addClass('active_rn_title')
+                                            .appendTo('body');
+                        }
+                        if (mySwiper.activeIndex != 0) {
+                            $('.active_rn_title').hide();
+                        } else {
+                            $('.active_rn_title').show();
+                        }
                     }
-                    //                    else {
-                    //                        $('body .rn_title').prependTo($('rightNav li').eq(index)).css({ 'margin-top': 0, 'padding-left': '.1rem' });
-                    //                        index--;
-                    //                    }
+                    // 下拉
+                    if (this.directionY < 0 || this.distY > 0) {
+                        if (y > prevPosition - 40 && prevPosition) {
+                            $('body>.active_rn_title').prependTo($('.rightNav li').eq(index).css('margin-top', 0))
+                                                 .removeClass('active_rn_title');
 
-
-                } else {
-                    $('.leftNav').prependTo($('.GoodsList')[0]).css('margin-top', 0)
-                    $('body>.rn_title').prependTo($('rightNav li').eq(0)).css({ 'margin-top': 0, 'padding-left': '0' });
-                    ifBoolean = true;
+                            $('.rightNav li').eq(index - 1).find('.rn_title').addClass('active_rn_title');
+                            //                            isBottom = true;
+                        }
+                        if (y > prevPosition) {
+                            $('.rightNav li').eq(index - 1).find('.rn_title').removeClass('active_rn_title_middle').appendTo('body');
+                            index = index === 0 ? 0 : index - 1;
+                            prevPosition = -553 + arrayLiHeight[index - 1];
+                            isBottom = false;
+                            $('.leftNav li').removeClass('activeLeft').eq(index).addClass('activeLeft');
+                        }
+                    }
                 }
-
-
+                else {
+                    $('#leftWrapper').prependTo('.GoodsList').css('margin-top', 0);
+                    $('body>.active_rn_title').prependTo($('.rightNav li').eq(0)).removeClass('active_rn_title');
+                    $('.rightNav li').eq(0).css('margin-top', '0');
+                    isBoolean = true;
+                    index = 0;
+                    prevPosition = 0;
+                }
                 if (y < -553 && this.startY > -553 || y > -553 && this.startY < -553) {
                     this.options.subMargin = -553;
                     this._translate(0, -553);
@@ -246,6 +300,16 @@ var commodityDetail = (function () {
                 if (y === 0) {
                     // 关闭 所有 效果 最终值 opacity 0 scale 0
                     setStatus();
+                }
+                if (y === this.maxScrollY) {
+                    $('.leftNav li').removeClass('activeLeft').eq($('.leftNav li').length - 1).addClass('activeLeft');
+                    key = true;
+                }
+                if (this.startY === this.maxScrollY && this.directionY < 0 && key) {
+                    index = $('.leftNav li').length - 2;
+                    key = false;
+                    $('.leftNav li').removeClass('activeLeft').eq(index).addClass('activeLeft');
+
                 }
             }
             function cancelScroll() {
@@ -259,6 +323,23 @@ var commodityDetail = (function () {
             mainScroll.on('scrollCancel', cancelScroll);
             mainScroll.on('scroll', animateScroll);
             mainScroll.on('scrollEnd', animateScroll);
+
+            // 左边 滚动栏
+            leftScroll = new IScroll('#leftWrapper', {
+                probeType: 3,
+                bounce: false
+            });
+
+            leftScroll.on('scroll', function () {
+                var y = this.y >> 0;
+
+                if (this.directionY < 0 && y === 0 && this.startY === 0) {
+
+                }
+            });
+
+
+
         },
         initSwiper: function () {
             // 点击 选项卡 阴影 
@@ -291,11 +372,20 @@ var commodityDetail = (function () {
                 resistanceRatio: 0,
                 on: {
                     setTranslate: function (translate) {
-                        console.log(translate);
                         $('.border-line').css({ transform: 'translateX(' + -translate / 3 + 'px)' });
                     },
                     slideChangeTransitionStart: function () {
                         setCss(this.activeIndex);
+                        if (this.activeIndex === 0) {
+                            $('#leftWrapper').show();
+                            $('.active_rn_title').show();
+                        } else {
+                            $('#leftWrapper').hide();
+                            $('.active_rn_title').hide();
+                        }
+                    },
+                    slideChangeTransitionEnd: function () {
+                        
                     }
                 }
             })
@@ -315,9 +405,6 @@ var commodityDetail = (function () {
                 nested: true,
                 resistanceRatio: 0
             });
-
-
-
 
         }
     }
