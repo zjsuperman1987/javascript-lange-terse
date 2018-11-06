@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="_js/swiper.css">
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    .content {
+        position: absolute;
+        top: 100px;
+        bottom: 0;
+        width: 100%;
+        background: gold;
+    }
+
+    .stand {
+        position: relative;
+        width: 100%;
+        height: 100px;
+        background: blue;
+    }
+
+    .container {
+        width: 100%;
+        height: 368px;
+        background: purple;
+    }
+
+    .one,
+    .two,
+    .three {
+        width: 100%;
+        height: 300px;
+    }
+
+    .wrapper_one,
+    .wrapper_two,
+    .wrapper_three {
+        width: 100%;
+        height: 368px;
+    }
+
+    .scroller_one,
+    .scroller_two,
+    .scroller_three {
+        overflow: hidden;
+    }
+    </style>
+</head>
+
+<body>
+    <div class='content'>
+        <div class='stand'></div>
+        <div class='container'>
+            <div class="swiper-container" style='overflow: unset'>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class='wrapper_one'>
+                            <div class='scroller_one'>
+                                <div class='one' style='background: red;'>1</div>
+                                <div class='one' style='background: yellow;'></div>
+                                <div class='one' style='background: blue;'></div>
+                                <div class='one' style='background: black;'></div>
+                                <div class='one' style='background: purple;'></div>
+                                <div class='one' style='background: green;'></div>
+                                <div class='one' style='background: gray;'></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class='wrapper_two'>
+                            <div class='scroller_two'>
+                                <div class='two' style='background: yellow;'>2</div>
+                                <div class='two' style='background: red;'></div>
+                                <div class='two' style='background: blue;'></div>
+                                <div class='two' style='background: black;'></div>
+                                <div class='two' style='background: purple;'></div>
+                                <div class='two' style='background: green;'></div>
+                                <div class='two' style='background: red;'></div>
+                                <div class='one' style='background: red;'>2</div>
+                                <div class='one' style='background: yellow;'></div>
+                                <div class='one' style='background: blue;'></div>
+                                <div class='one' style='background: black;'></div>
+                                <div class='one' style='background: purple;'></div>
+                                <div class='one' style='background: green;'></div>
+                                <div class='one' style='background: gray;'></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class='wrapper_three'>
+                            <div class='scroller_three'>
+                                <div class='three' style='background: pink;'>3</div>
+                                <div class='three' style='background: red;'></div>
+                                <div class='three' style='background: blue;'></div>
+                                <div class='three' style='background: gold;'></div>
+                                <div class='three' style='background: purple;'></div>
+                                <div class='three' style='background: green;'></div>
+                                <div class='three' style='background: black;'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src='_js/swiper.js'></script>
+    <script type="text/javascript" src='iscroll-probe.js'></script>
+    <script type="text/javascript" src='_js/jquery.min.js'></script>
+    <script type="text/javascript">
+    var mySwiper = new Swiper('.swiper-container', {
+        resistanceRatio: 0,
+        freeMode: false,
+        on: {
+        	slideChangeTransitionStart: function () {
+        		// 记录 前一个选项卡 滑动距离
+        		var transformScroller = parseInt(this.slides[this.previousIndex].children[0].children[0].style.transform.match(/-?\d+/g)[1]);
+        		sessionStorage.setItem(this.previousIndex, transformScroller);
+        	},
+            slideChangeTransitionEnd: function() {
+                var transformContentArray = $('.content').css('transform').match(/-?\d+/g);
+                var transformContent = transformContentArray ? parseInt(transformContentArray[transformContentArray.length - 1]) : 0;
+
+
+                initControl.initScroll(this.activeIndex, transformContent)
+            }
+        }
+    });
+
+    var oneScroller,
+        twoScroller,
+        threeScroller;
+
+
+
+    window.onload = function() {
+        initControl.initScroll();
+    }
+
+    var initControl = (function() {
+        function animate() {
+            var y = this.y >> 0;
+
+            if (y <= -150) {
+                $('.stand').appendTo('body');
+                $('.one:first-child').css('margin-top', 100);
+                console.log(y + 150, y)
+                $('.content').css('transform', 'translateY(' + -150 + 'px)');
+
+                $(this.scroller).css('transform', 'translate(0,' + (y + 150) + 'px)');
+            } else {
+                $('.stand').prependTo('.content');
+                $('.one:first-child').css('margin-top', 0);
+
+                $(this.scroller).css('transform', 'translate(0,0)');
+                $('.content').css('transform', 'translateY(' + y + 'px)');
+
+            }
+        }
+
+        function cancelScroll() {
+            var y = this.y >> 0;
+
+            if (y <= -150) {
+                $(this.scroller).css('transform', 'translate(0,' + (y+150) + 'px)');
+                $('.content').css('transform', 'translateY(' + -150 + 'px)');
+            }else{
+            	$(this.scroller).css('transform', 'translate(0,0)');
+                $('.content').css('transform', 'translateY(' + y + 'px)');
+            }
+        }
+
+        return {
+            initScroll: function(index, transformContent) {
+                var index = index ? index : 0,
+                    transformContent = transformContent ? transformContent : 0;
+
+
+                if (index === 0) {
+                    if (oneScroller) {
+                        // oneScroller.refresh();
+                        // y = parseInt(sessionStorage.getItem(0), 10);
+                        // oneScroller.scroller.style.transform = 'translate(0,' + y + 'px)';
+                    } else {
+                        oneScroller = new IScroll('.wrapper_one', {
+                            probeType: 3,
+                            bounce: false
+                        })
+                        oneScroller.on('scroll', animate)
+                        oneScroller.on('scrollEnd', animate)
+                        oneScroller.on('scrollCancel', cancelScroll)
+                    }
+                }
+                if (index === 1) {
+                    y = parseInt(sessionStorage.getItem(1), 10)
+
+                    if (twoScroller) {
+
+                    } else {
+                        twoScroller = new IScroll('.wrapper_two', {
+                            probeType: 3,
+                            bounce: false
+                        })
+                        twoScroller.on('scroll', animate)
+                        twoScroller.on('scrollEnd', animate)
+                        twoScroller.on('scrollCancel', cancelScroll)
+                    }
+
+                    $(twoScroller.scroller).css('tranform', 'translate(0,' + y + 'px)')
+
+                }
+                if (index === 2) {
+                    y = parseInt(sessionStorage.getItem(2), 10)
+
+                    if (threeScroller) {
+
+                    } else {
+                        threeScroller = new IScroll('.wrapper_three', {
+                            probeType: 3,
+                            bounce: false
+                        })
+                        threeScroller.on('scroll', animate)
+                        threeScroller.on('scrollEnd', animate)
+                        threeScroller.on('scrollCancel', cancelScroll)
+                    }
+                }
+                // 设置Content transform
+                if (transformContent > -150) {
+                    $('.content').css('transform', 'translate(0,' + transformContent + 'px)');
+                } else {
+                    $('.content').css('transform', 'translate(0,' + -150 + 'px)');
+                }
+            }
+        }
+    })()
+    </script>
+</body>
+
+</html>
