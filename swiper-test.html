@@ -122,27 +122,27 @@
     var mySwiper = new Swiper('.swiper-container', {
         resistanceRatio: 0,
         freeMode: false,
+        scrollerTransform: [0,0,0],
+        scrollerObj: [],
+        isOverflow: false,
+        isStorageScroller: false,
         on: {
-        	slideChangeTransitionStart: function () {
-        		// 记录 前一个选项卡 滑动距离
-        		var transformScroller = parseInt(this.slides[this.previousIndex].children[0].children[0].style.transform.match(/-?\d+/g)[1]);
-        		sessionStorage.setItem(this.previousIndex, transformScroller);
-        	},
+            slideChangeTransitionStart: function() {
+                // 记录 前一个选项卡 滑动距离
+                var transformScroller = parseInt(this.slides[this.previousIndex].children[0].children[0].style.transform.match(/-?\d+/g)[1]);
+                this.passedParams.scrollerTransform[this.previousIndex] = transformScroller;
+            },
             slideChangeTransitionEnd: function() {
                 var transformContentArray = $('.content').css('transform').match(/-?\d+/g);
                 var transformContent = transformContentArray ? parseInt(transformContentArray[transformContentArray.length - 1]) : 0;
 
-
-                initControl.initScroll(this.activeIndex, transformContent)
+                initControl.initScroll(this.activeIndex, transformContent);
             }
         }
     });
-
     var oneScroller,
         twoScroller,
         threeScroller;
-
-
 
     window.onload = function() {
         initControl.initScroll();
@@ -150,33 +150,52 @@
 
     var initControl = (function() {
         function animate() {
-            var y = this.y >> 0;
+            var y = this.y >> 0,
+                oldScrollY = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex],
+                oldScrollY = oldScrollY ? oldScrollY : 0;
+            console.log(y);
 
-            if (y <= -150) {
-                $('.stand').appendTo('body');
-                $('.one:first-child').css('margin-top', 100);
-                console.log(y + 150, y)
-                $('.content').css('transform', 'translateY(' + -150 + 'px)');
+            if (y > -100) {
+                $('.content').css('transform', 'translate(0,' + y + 'px)');
 
-                $(this.scroller).css('transform', 'translate(0,' + (y + 150) + 'px)');
-            } else {
+                $(mySwiper.slides[mySwiper.activeIndex]).children().children()
+                    .css('transform', 'translate(0,' + oldScrollY + 'px)')
+                    .children().css('margin-top', 0);
+                    console.log(mySwiper.passedParams.isOverflow, 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+             	if (!mySwiper.passedParams.isOverflow) {
+             		$(mySwiper.slides[mySwiper.activeIndex]).children().children()
+                    .css('transform', 'translate(0,0px)')
+             	}
+
+
                 $('.stand').prependTo('.content');
-                $('.one:first-child').css('margin-top', 0);
+                $('.content').css('margin-top', 0);
+            } else {
+                $('.content').css('transform', 'translate(0,' + -100 + 'px)');
+                $(mySwiper.slides[mySwiper.activeIndex]).children().children()
+                    .css('transform', 'translate(0,' + (y + 100) + 'px)');
 
-                $(this.scroller).css('transform', 'translate(0,0)');
-                $('.content').css('transform', 'translateY(' + y + 'px)');
+                $('.stand').appendTo('body');
+                $('.content').css('margin-top', 100);
 
+                if (mySwiper.passedParams.isOverflow) {
+                    $('.swiper-container').css('overflow', 'unset');
+                    $('.content').css('bottom', 0);
+					this.y += mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] - 100;
+					mySwiper.passedParams.isOverflow = false;
+                }
             }
         }
 
         function cancelScroll() {
             var y = this.y >> 0;
+            console.log(y, '===============================');
 
-            if (y <= -150) {
-                $(this.scroller).css('transform', 'translate(0,' + (y+150) + 'px)');
-                $('.content').css('transform', 'translateY(' + -150 + 'px)');
-            }else{
-            	$(this.scroller).css('transform', 'translate(0,0)');
+            if (y <= -100) {
+                $(this.scroller).css('transform', 'translate(0,' + (y + 100) + 'px)');
+                $('.content').css('transform', 'translateY(' + -100 + 'px)');
+            } else {
+                $(this.scroller).css('transform', 'translate(0,' + mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + 'px)');
                 $('.content').css('transform', 'translateY(' + y + 'px)');
             }
         }
@@ -184,7 +203,8 @@
         return {
             initScroll: function(index, transformContent) {
                 var index = index ? index : 0,
-                    transformContent = transformContent ? transformContent : 0;
+                    transformContent = transformContent ? transformContent : 0,
+                    transformScroller = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex];
 
 
                 if (index === 0) {
@@ -200,7 +220,10 @@
                         oneScroller.on('scroll', animate)
                         oneScroller.on('scrollEnd', animate)
                         oneScroller.on('scrollCancel', cancelScroll)
+
+                        mySwiper.passedParams.scrollerObj.push(oneScroller);
                     }
+                    // console.log(mySwiper.passedParams.scrollerTransform[0])
                 }
                 if (index === 1) {
                     y = parseInt(sessionStorage.getItem(1), 10)
@@ -215,6 +238,9 @@
                         twoScroller.on('scroll', animate)
                         twoScroller.on('scrollEnd', animate)
                         twoScroller.on('scrollCancel', cancelScroll)
+
+                        mySwiper.passedParams.scrollerObj.push(twoScroller);
+
                     }
 
                     $(twoScroller.scroller).css('tranform', 'translate(0,' + y + 'px)')
@@ -233,13 +259,28 @@
                         threeScroller.on('scroll', animate)
                         threeScroller.on('scrollEnd', animate)
                         threeScroller.on('scrollCancel', cancelScroll)
+
+                        mySwiper.passedParams.scrollerObj.push(threeScroller);
+
                     }
                 }
-                // 设置Content transform
-                if (transformContent > -150) {
-                    $('.content').css('transform', 'translate(0,' + transformContent + 'px)');
+
+
+                // 初始化
+                if (transformContent <= -100) {
+                    $('.content').css('transform', 'translate(0,' + -100 + 'px)');
+                    $(mySwiper.slides[mySwiper.activeIndex]).children().children().css('transform', 'translate(0,' + transformScroller + 'px)');
+                    mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = transformScroller - 100;
                 } else {
-                    $('.content').css('transform', 'translate(0,' + -150 + 'px)');
+                    if (Object.prototype.toString.call(mySwiper.previousIndex) != '[object Undefined]') {
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = mySwiper.passedParams.scrollerObj[mySwiper.previousIndex].y;
+                    }
+                    if (mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]) {
+                        $('.swiper-container').css('overflow', 'hidden');
+                        $('.content').css('bottom', -100);
+                        mySwiper.passedParams.isOverflow = true;
+                        console.log('init==========================')
+                    }
                 }
             }
         }
