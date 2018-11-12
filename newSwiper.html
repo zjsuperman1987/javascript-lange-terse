@@ -5,7 +5,7 @@
     <title></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <link rel="stylesheet" type="text/css" href="_js/swiper.css">
+    <link rel="stylesheet" type="text/css" href="swiper-4.3.5/dist/css/swiper.css">
     <style type="text/css">
     * {
         padding: 0;
@@ -115,9 +115,9 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src='_js/swiper.js'></script>
+    <script type="text/javascript" src='swiper-4.3.5/dist/js/swiper.js'></script>
     <script type="text/javascript" src='iscroll-probe.js'></script>
-    <script type="text/javascript" src='_js/jquery.min.js'></script>
+    <script type="text/javascript" src='jquery1.12.4.js'></script>
     <script type="text/javascript">
     var mySwiper = new Swiper('.swiper-container', {
         resistanceRatio: 0,
@@ -136,10 +136,6 @@
                 if (this.slides[this.previousIndex].children[0].children[0].style.transform) {
                     this.passedParams.scrollerTransform[this.previousIndex] = 
                                 parseInt((this.slides[this.previousIndex].children[0].children[0].style.transform).match(/-?\d+/g)[1], 10);
-                }
-
-                if (parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10) === -100) {
-                     this.passedParams.oldContentTransform[this.previousIndex] = true;
                 }
 
                 initControl.initScroll(this.activeIndex, parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10));
@@ -165,32 +161,33 @@
     }
 
     var initControl = (function() {
-        function animate() {
+        function animteForce() {
             var y = this.y >> 0;
             
-            console.log(y);
+            console.log(this.options.rechanged,mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]);
 
             if (y > -100) {
                 $(this.scroller).css('transform', 'translate(0,' + 
                    (this.options.rechanged ? 0 : mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]) + 'px)');
                 $('.content').css('transform', 'translate(0,' + y + 'px)');
 
-                if (this.options.rechanged) {
+                if (this.options.rechanged) {   
                     mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] = 0;
-                    this.options.rechanged = false;
-                    this.options.changedY = false;
+                    // this.options.changedY = false;
                 }
-
             } else {
                 $(this.scroller).css('transform', 'translate(0,' + (y + 100) + 'px)');
                 $('.content').css('transform', 'translate(0,-100px)');
             }
-            if (mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex]) {
+
+            if (mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] && this.options.changedY) {
                 if (y < -100) {
+                    console.log('我是移动')
                     mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = false;
                     this._translate(0, mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]);
                     this.y = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] - 100;
                     this.options.rechanged = true;
+                    this.options.changedY = false;
                 }
             }
         }
@@ -208,11 +205,10 @@
                         oneScroller = new IScroll('.wrapper_one', {
                             probeType: 3,
                             bounce: false
-
                         })
-                        oneScroller.on('scroll', animate)
-                        oneScroller.on('scrollEnd', animate)
-                        oneScroller.on('scrollCancel', animate)
+                        oneScroller.on('scroll', animteForce)
+                        oneScroller.on('scrollEnd', animteForce)
+                        oneScroller.on('scrollCancel', animteForce)
 
                         mySwiper.passedParams.scrollerObj.push(oneScroller);
                     }
@@ -225,11 +221,10 @@
                         twoScroller = new IScroll('.wrapper_two', {
                             probeType: 3,
                             bounce: false
-
                         })
-                        twoScroller.on('scroll', animate)
-                        twoScroller.on('scrollEnd', animate)
-                        twoScroller.on('scrollCancel', animate)
+                        twoScroller.on('scroll', animteForce)
+                        twoScroller.on('scrollEnd', animteForce)
+                        twoScroller.on('scrollCancel', animteForce)
 
                         mySwiper.passedParams.scrollerObj.push(twoScroller);
 
@@ -247,9 +242,9 @@
                             bounce: false
 
                         })
-                        threeScroller.on('scroll', animate)
-                        threeScroller.on('scrollEnd', animate)
-                        threeScroller.on('scrollCancel', animate)
+                        threeScroller.on('scroll', animteForce)
+                        threeScroller.on('scrollEnd', animteForce)
+                        threeScroller.on('scrollCancel', animteForce)
 
                         mySwiper.passedParams.scrollerObj.push(threeScroller);
                     }
@@ -262,20 +257,21 @@
                                             'translate(0,' + mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + 'px)';
 
                 mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + contentTransform;
-
+                mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.rechanged = true;
 
                 if (contentTransform > -100) {
-                    if (mySwiper.passedParams.oldContentTransform[mySwiper.activeIndex]) {
+                    if (transformScroller) {
+
                         mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = contentTransform;
-                        mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = true;
+
                         // 控制iscroll 弹动
+                        mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = true;
+
                         mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.changedY = true;
-                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.reY =
-                                             mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex];
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.rechanged = false;
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.reY = transformScroller - 100;
                     }
                 }
-
-
             }
         }
     })()
