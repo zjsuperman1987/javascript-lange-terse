@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="_js/swiper.css">
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    .content {
+        position: absolute;
+        top: 100px;
+        bottom: 0;
+        width: 100%;
+        background: gold;
+    }
+
+    .stand {
+        position: relative;
+        width: 100%;
+        height: 100px;
+        background: blue;
+    }
+
+    .container {
+        width: 100%;
+        height: 368px;
+        background: purple;
+    }
+
+    .one,
+    .two,
+    .three {
+        width: 100%;
+        height: 300px;
+    }
+
+    .wrapper_one,
+    .wrapper_two,
+    .wrapper_three {
+        width: 100%;
+        height: 368px;
+    }
+
+    .scroller_one,
+    .scroller_two,
+    .scroller_three {
+        overflow: hidden;
+    }
+    </style>
+</head>
+
+<body>
+    <div class='content'>
+        <div class='stand'></div>
+        <div class='container'>
+            <div class="swiper-container" style='height: 468px'>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class='wrapper_one'>
+                            <div class='scroller_one'>
+                                <div class='one' style='background: red;'>1</div>
+                                <div class='one' style='background: yellow;'></div>
+                                <div class='one' style='background: blue;'></div>
+                                <div class='one' style='background: black;'></div>
+                                <div class='one' style='background: purple;'></div>
+                                <div class='one' style='background: green;'></div>
+                                <div class='one' style='background: gray;'></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class='wrapper_two'>
+                            <div class='scroller_two'>
+                                <div class='two' style='background: yellow;'>2</div>
+                                <div class='two' style='background: red;'></div>
+                                <div class='two' style='background: blue;'></div>
+                                <div class='two' style='background: black;'></div>
+                                <div class='two' style='background: purple;'></div>
+                                <div class='two' style='background: green;'></div>
+                                <div class='two' style='background: red;'></div>
+                                <div class='one' style='background: red;'>2</div>
+                                <div class='one' style='background: yellow;'></div>
+                                <div class='one' style='background: blue;'></div>
+                                <div class='one' style='background: black;'></div>
+                                <div class='one' style='background: purple;'></div>
+                                <div class='one' style='background: green;'></div>
+                                <div class='one' style='background: gray;'></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class='wrapper_three'>
+                            <div class='scroller_three'>
+                                <div class='three' style='background: pink;'>3</div>
+                                <div class='three' style='background: red;'></div>
+                                <div class='three' style='background: blue;'></div>
+                                <div class='three' style='background: gold;'></div>
+                                <div class='three' style='background: purple;'></div>
+                                <div class='three' style='background: green;'></div>
+                                <div class='three' style='background: black;'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src='_js/swiper.js'></script>
+    <script type="text/javascript" src='iscroll-probe.js'></script>
+    <script type="text/javascript" src='_js/jquery.min.js'></script>
+    <script type="text/javascript">
+    var mySwiper = new Swiper('.swiper-container', {
+        resistanceRatio: 0,
+        freeMode: false,
+        touchAngle: 10,
+        touchMoveStopPropagation : false,
+
+        scrollerObj: [],
+        scrollerTransform: [0, 0, 0],
+        oldContentTransform: [false,false,false],
+        scrollMoveY: [false,false,false],
+
+        on: {
+           slideChangeTransitionStart: function() {
+                var oldContentTransform;
+                if (this.slides[this.previousIndex].children[0].children[0].style.transform) {
+                    this.passedParams.scrollerTransform[this.previousIndex] = 
+                                parseInt((this.slides[this.previousIndex].children[0].children[0].style.transform).match(/-?\d+/g)[1], 10);
+                }
+
+                if (parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10) === -100) {
+                     this.passedParams.oldContentTransform[this.previousIndex] = true;
+                }
+
+                initControl.initScroll(this.activeIndex, parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10));
+            },
+            sliderMove: function(event) {
+                // console.log(event)
+                if (parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10) > -100) { 
+
+                }
+            }
+        }
+    });
+
+
+
+
+    var oneScroller,
+        twoScroller,
+        threeScroller;
+
+    window.onload = function() {
+        initControl.initScroll();
+    }
+
+    var initControl = (function() {
+        function animate() {
+            var y = this.y >> 0;
+            
+            console.log(y);
+
+            if (y > -100) {
+                $(this.scroller).css('transform', 'translate(0,' + 
+                   (this.options.rechanged ? 0 : mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]) + 'px)');
+                $('.content').css('transform', 'translate(0,' + y + 'px)');
+
+                if (this.options.rechanged) {
+                    mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] = 0;
+                    this.options.rechanged = false;
+                    this.options.changedY = false;
+                }
+
+            } else {
+                $(this.scroller).css('transform', 'translate(0,' + (y + 100) + 'px)');
+                $('.content').css('transform', 'translate(0,-100px)');
+            }
+            if (mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex]) {
+                if (y < -100) {
+                    mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = false;
+                    this._translate(0, mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]);
+                    this.y = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] - 100;
+                    this.options.rechanged = true;
+                }
+            }
+        }
+
+        return {
+            initScroll: function(index, contentTransform) {
+                var index = index ? index : 0,
+                    transformScroller = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex],
+                    contentTransform = contentTransform ? contentTransform : 0;
+
+
+
+                if (index === 0) {
+                    if (!oneScroller) {
+                        oneScroller = new IScroll('.wrapper_one', {
+                            probeType: 3,
+                            bounce: false
+
+                        })
+                        oneScroller.on('scroll', animate)
+                        oneScroller.on('scrollEnd', animate)
+                        oneScroller.on('scrollCancel', animate)
+
+                        mySwiper.passedParams.scrollerObj.push(oneScroller);
+                    }
+                    // console.log(mySwiper.passedParams.scrollerTransform[0])
+                }
+                if (index === 1) {
+                    y = parseInt(sessionStorage.getItem(1), 10)
+
+                    if (!twoScroller) {
+                        twoScroller = new IScroll('.wrapper_two', {
+                            probeType: 3,
+                            bounce: false
+
+                        })
+                        twoScroller.on('scroll', animate)
+                        twoScroller.on('scrollEnd', animate)
+                        twoScroller.on('scrollCancel', animate)
+
+                        mySwiper.passedParams.scrollerObj.push(twoScroller);
+
+                    }
+
+                    $(twoScroller.scroller).css('tranform', 'translate(0,' + y + 'px)')
+
+                }
+                if (index === 2) {
+                    y = parseInt(sessionStorage.getItem(2), 10)
+
+                    if (!threeScroller) {
+                        threeScroller = new IScroll('.wrapper_three', {
+                            probeType: 3,
+                            bounce: false
+
+                        })
+                        threeScroller.on('scroll', animate)
+                        threeScroller.on('scrollEnd', animate)
+                        threeScroller.on('scrollCancel', animate)
+
+                        mySwiper.passedParams.scrollerObj.push(threeScroller);
+                    }
+                }
+
+
+
+                $('.content').css('transform', 'translate(0,' + contentTransform + 'px)');
+                mySwiper.slides[mySwiper.activeIndex].children[0].children[0].style.transform = 
+                                            'translate(0,' + mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + 'px)';
+
+                mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + contentTransform;
+
+
+                if (contentTransform > -100) {
+                    if (mySwiper.passedParams.oldContentTransform[mySwiper.activeIndex]) {
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = contentTransform;
+                        mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = true;
+                        // 控制iscroll 弹动
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.changedY = true;
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.reY =
+                                             mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex];
+                    }
+                }
+
+
+            }
+        }
+    })()
+    </script>
+</body> 
+
+</html>
