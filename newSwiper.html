@@ -123,33 +123,28 @@
         resistanceRatio: 0,
         freeMode: false,
         touchAngle: 10,
-        touchMoveStopPropagation : false,
+        touchMoveStopPropagation: false,
 
         scrollerObj: [],
         scrollerTransform: [0, 0, 0],
-        oldContentTransform: [false,false,false],
-        scrollMoveY: [false,false,false],
+        scrollMoveY: [false, false, false],
 
         on: {
-           slideChangeTransitionStart: function() {
-                var oldContentTransform;
+            slideChangeTransitionStart: function() {
                 if (this.slides[this.previousIndex].children[0].children[0].style.transform) {
-                    this.passedParams.scrollerTransform[this.previousIndex] = 
-                                parseInt((this.slides[this.previousIndex].children[0].children[0].style.transform).match(/-?\d+/g)[1], 10);
+                    this.passedParams.scrollerTransform[this.previousIndex] =
+                        parseInt((this.slides[this.previousIndex].children[0].children[0].style.transform).match(/-?\d+/g)[1], 10);
                 }
 
                 initControl.initScroll(this.activeIndex, parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10));
             },
             sliderMove: function(event) {
-                // console.log(event)
-                if (parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10) > -100) { 
+                if (parseInt($('.content').css('transform').match(/-?\d+/g)[5], 10) > -100) {
 
                 }
             }
         }
     });
-
-
 
 
     var oneScroller,
@@ -163,31 +158,31 @@
     var initControl = (function() {
         function animteForce() {
             var y = this.y >> 0;
-            
-            console.log(this.options.rechanged,mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]);
+
+            // console.log(y);
 
             if (y > -100) {
-                $(this.scroller).css('transform', 'translate(0,' + 
-                   (this.options.rechanged ? 0 : mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]) + 'px)');
+                $(this.scroller).css('transform', 'translate(0,' +
+                    (this.options.rechanged ? 0 : mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]) + 'px)');
                 $('.content').css('transform', 'translate(0,' + y + 'px)');
 
-                if (this.options.rechanged) {   
+                if (this.options.rechanged) {
                     mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] = 0;
-                    // this.options.changedY = false;
                 }
             } else {
+                console.log()
                 $(this.scroller).css('transform', 'translate(0,' + (y + 100) + 'px)');
                 $('.content').css('transform', 'translate(0,-100px)');
             }
 
-            if (mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] && this.options.changedY) {
+            if (mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex]) {
                 if (y < -100) {
-                    console.log('我是移动')
                     mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = false;
+                    this.options.momentumY = false;
+                    this.options.rechanged = true;
+
                     this._translate(0, mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex]);
                     this.y = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] - 100;
-                    this.options.rechanged = true;
-                    this.options.changedY = false;
                 }
             }
         }
@@ -195,8 +190,8 @@
         return {
             initScroll: function(index, contentTransform) {
                 var index = index ? index : 0,
-                    transformScroller = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex],
-                    contentTransform = contentTransform ? contentTransform : 0;
+                    contentTransform = contentTransform ? contentTransform : 0,
+                    transformScroller = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex];
 
 
 
@@ -212,7 +207,6 @@
 
                         mySwiper.passedParams.scrollerObj.push(oneScroller);
                     }
-                    // console.log(mySwiper.passedParams.scrollerTransform[0])
                 }
                 if (index === 1) {
                     y = parseInt(sessionStorage.getItem(1), 10)
@@ -253,29 +247,28 @@
 
 
                 $('.content').css('transform', 'translate(0,' + contentTransform + 'px)');
-                mySwiper.slides[mySwiper.activeIndex].children[0].children[0].style.transform = 
-                                            'translate(0,' + mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + 'px)';
-
+                mySwiper.slides[mySwiper.activeIndex].children[0].children[0].style.transform = 'translate(0,' + mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + 'px)';
                 mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = mySwiper.passedParams.scrollerTransform[mySwiper.activeIndex] + contentTransform;
                 mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.rechanged = true;
 
                 if (contentTransform > -100) {
                     if (transformScroller) {
-
                         mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].y = contentTransform;
-
                         // 控制iscroll 弹动
                         mySwiper.passedParams.scrollMoveY[mySwiper.activeIndex] = true;
-
-                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.changedY = true;
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.momentumY = true;
                         mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.rechanged = false;
-                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.reY = transformScroller - 100;
+                        mySwiper.passedParams.scrollerObj[mySwiper.activeIndex].options.realY = transformScroller - 100;
+                        // 控制 动能 进入 
                     }
                 }
             }
+
+
+
         }
     })()
     </script>
-</body> 
+</body>
 
 </html>
